@@ -29,7 +29,7 @@ def cwru_load_data(root_path, normal=False):
     return files, labels
 
 
-def cwru_transform(file, label, type, transform, window_size=2048, overlap=0.5, img_size=128, normal=False, gray=False):
+def cwru_transform(file, label, transform, type="DE", window_size=2048, overlap=0.5, img_size=128, normal=False, gray=False):
     mat_file = scipy.io.loadmat(file)
     images = []
     labels = []
@@ -51,7 +51,7 @@ def cwru_transform(file, label, type, transform, window_size=2048, overlap=0.5, 
     return np.array(images), labels
 
 
-def cwru_split(load_data, path, type, trans, window_size=2048, overlap=0.5, img_size=128, normal=False, gray=False):
+def cwru_split(load_data, path, type, trans, window_size=2048, overlap=0.5, img_size=128, normal=False, gray=True):
     files, labels = load_data(path, normal)
     train = {'data': [], 'label': []}
     val   = {'data': [], 'label': []}
@@ -108,3 +108,19 @@ def cwru_seperate(dataset):
             cls["label"] = np.array(cls["label"])
 
     return normal, outer_race, inner_race, ball
+
+def cwru_inference(file, transform, type="DE", window_size=2048, overlap=0, img_size=128, normal=False, gray=True):
+    mat_file = scipy.io.loadmat(file)
+    images = []
+    for i, j in mat_file.items():
+        if type in i:
+            signal = j.squeeze()
+            if normal:
+                signal = resample_poly(signal, up=1, down=4)
+
+            windows = sliding_window(signal, window_size, overlap)
+            for window in windows:
+                img = transform(window, img_size=img_size, gray=gray)
+                images.append(img)
+
+    return np.array(images)
