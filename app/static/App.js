@@ -15,111 +15,170 @@ const MODEL_PATHS = {
   },
 };
 
-let currentTransform = 'cwt';
-let currentModel = 'MobileOneS0';
-let isRunning = false;
+const FAULT_MAP = {
+  0: { name: 'Normal condition', code: 'Class 0 — No fault detected',      icon: '✓', cls: 'normal' },
+  1: { name: 'Outer race fault', code: 'Class 1 — Outer race defect',      icon: '⚠', cls: 'outer'  },
+  2: { name: 'Inner race fault', code: 'Class 2 — Inner race defect',      icon: '⚡', cls: 'inner'  },
+  3: { name: 'Ball fault',       code: 'Class 3 — Rolling element defect', icon: '◉', cls: 'ball'   },
+};
 
-// ── Transform switch ──────────────────────────────────────────
+const TRANSFORM_LABELS = {
+  cwt:  'Continuous Wavelet Transform · Scalogram',
+  stft: 'Short-Time Fourier Transform · Spectrogram',
+};
+
+let currentTransform = 'cwt';
+let currentModel     = 'MobileOneS0';
+let isRunning        = false;
+
+// ── Transform ────────────────────────────────────────────────
 function switchTransform(t) {
   if (currentTransform === t) return;
   currentTransform = t;
-  document.getElementById('tab-cwt').classList.toggle('active', t === 'cwt');
+  document.getElementById('tab-cwt').classList.toggle('active',  t === 'cwt');
   document.getElementById('tab-stft').classList.toggle('active', t === 'stft');
+  document.getElementById('transform-sub').textContent = TRANSFORM_LABELS[t];
+  document.getElementById('transform-plot-label').textContent =
+    t === 'cwt' ? 'Scalogram (CWT)' : 'Spectrogram (STFT)';
 }
 
-// ── Model select ──────────────────────────────────────────────
+// ── Model ────────────────────────────────────────────────────
 function selectModel(m) {
   if (currentModel === m) return;
   currentModel = m;
-  MODEL_KEYS.forEach(name => {
-    document.getElementById('btn-' + name).classList.toggle('active', name === m);
-  });
+  MODEL_KEYS.forEach(name =>
+    document.getElementById('btn-' + name).classList.toggle('active', name === m)
+  );
 }
 
-// ── Ripple effect ─────────────────────────────────────────────
+// ── Ripple ───────────────────────────────────────────────────
 function createRipple(e) {
-  const btn = e.currentTarget;
+  const btn  = e.currentTarget;
   const rect = btn.getBoundingClientRect();
   const size = Math.max(rect.width, rect.height) * 2;
-  const x = e.clientX - rect.left - size / 2;
-  const y = e.clientY - rect.top - size / 2;
-  const ripple = document.createElement('span');
-  ripple.className = 'ripple';
-  ripple.style.cssText = `width:${size}px;height:${size}px;left:${x}px;top:${y}px`;
-  btn.appendChild(ripple);
-  ripple.addEventListener('animationend', () => ripple.remove());
+  const rip  = document.createElement('span');
+  rip.className = 'ripple';
+  rip.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-rect.left-size/2}px;top:${e.clientY-rect.top-size/2}px`;
+  btn.appendChild(rip);
+  rip.addEventListener('animationend', () => rip.remove());
 }
 
-// ── Waveform control ──────────────────────────────────────────
-function setWaveform(active) {
-  document.getElementById('waveform').classList.toggle('idle', !active);
-}
-
-// ── Set badge ─────────────────────────────────────────────────
+// ── Helpers ──────────────────────────────────────────────────
 function setBadge(type, text) {
-  const badge = document.getElementById('result-badge');
-  badge.className = 'badge badge-' + type;
-  badge.textContent = text;
+  const el = document.getElementById('result-badge');
+  el.className   = 'badge badge-' + type;
+  el.textContent = text;
 }
 
-// ── Animate number ────────────────────────────────────────────
-function animateValue(el, value) {
+function animatePill(id, value) {
+  const el = document.getElementById(id);
   el.classList.remove('pop');
   void el.offsetWidth;
   el.textContent = value;
   el.classList.add('pop');
 }
 
-// ── Run diagnosis ─────────────────────────────────────────────
+function setFault(label) {
+  const f    = FAULT_MAP[label];
+  const icon = document.getElementById('fault-icon');
+  const name = document.getElementById('fault-name');
+  const code = document.getElementById('fault-code');
+  icon.className   = 'fault-icon ' + (f ? f.cls : '');
+  icon.textContent = f ? f.icon : '?';
+  name.classList.remove('pop');
+  void name.offsetWidth;
+  name.textContent = f ? f.name : '—';
+  name.classList.add('pop');
+  code.textContent = f ? f.code : 'Unknown class';
+}
+
+function showSkeleton(show) {
+  ['raw-skeleton', 'transform-skeleton'].forEach(id =>
+    document.getElementById(id).classList.toggle('hidden', !show)
+  );
+}
+
+function setPlotImg(id, b64) {
+  const img = document.getElementById(id);
+  img.classList.remove('loaded');
+  img.src = 'data:image/png;base64,' + b64;
+  img.onload = () => img.classList.add('loaded');
+}
+
+function showPlots(show) {
+  document.getElementById('empty-state').classList.toggle('hidden', show);
+  document.getElementById('plots-area').classList.toggle('visible', show);
+}
+
+function resetPlots() {
+  ['raw-plot', 'transform-plot'].forEach(id => {
+    const img = document.getElementById(id);
+    img.src = ''; img.classList.remove('loaded');
+  });
+  document.getElementById('raw-meta').textContent       = '';
+  document.getElementById('transform-meta').textContent = '';
+}
+
+// ── Run ──────────────────────────────────────────────────────
 async function runDiagnosis() {
   if (isRunning) return;
 
   const modelPath  = MODEL_PATHS[currentTransform][currentModel];
   const signalPath = document.getElementById('signal-path').value.trim();
   const btn        = document.getElementById('run-btn');
-  const resultCard = document.getElementById('result-card');
   const statusLine = document.getElementById('status-line');
-  const labelVal   = document.getElementById('label-val');
-  const confVal    = document.getElementById('conf-val');
-  const confBar    = document.getElementById('conf-bar');
-  const confPct    = document.getElementById('conf-pct');
 
-  // Validation
   if (!signalPath) {
-    resultCard.classList.add('visible', 'error');
-    resultCard.classList.remove('success');
     setBadge('error', 'Error');
-    animateValue(labelVal, '—');
-    animateValue(confVal, '—');
-    confBar.style.width = '0%';
-    confPct.textContent = '';
-    statusLine.className = 'status-line error';
-    statusLine.textContent = 'Please fill in the signal file path.';
-    setWaveform(false);
+    setFault(null);
+    document.getElementById('fault-code').textContent = 'Please fill in the signal file path';
+    animatePill('conf-val', '—');
+    animatePill('time-val', '—');
+    animatePill('idx-val',  '—');
+    document.getElementById('conf-bar').style.width = '0%';
+    document.getElementById('conf-pct-label').textContent = '';
+    statusLine.className   = 'status-line error';
+    statusLine.textContent = 'Signal path is required.';
     return;
   }
 
-  // Loading state
-  isRunning = true;
+  // Loading
+  isRunning    = true;
   btn.disabled = true;
-  btn.querySelector('.btn-inner').innerHTML = `<span class="spinner"></span>Analyzing…`;
-  resultCard.classList.add('visible');
-  resultCard.classList.remove('success', 'error');
-  setBadge('pending', 'Running');
-  animateValue(labelVal, '—');
-  animateValue(confVal, '—');
-  confBar.style.width = '0%';
-  confPct.textContent = '';
-  statusLine.className = 'status-line';
+  btn.querySelector('.btn-inner').innerHTML =
+    `<span class="spinner"></span>Analyzing…`;
+
+  setBadge('running', 'Running');
+  document.getElementById('fault-icon').className   = 'fault-icon';
+  document.getElementById('fault-icon').textContent = '…';
+  document.getElementById('fault-name').textContent = 'Analyzing…';
+  document.getElementById('fault-code').textContent = `${currentModel} · ${currentTransform.toUpperCase()}`;
+  animatePill('conf-val', '—');
+  animatePill('time-val', '—');
+  animatePill('idx-val',  '—');
+  document.getElementById('conf-bar').style.width = '0%';
+  document.getElementById('conf-pct-label').textContent = '';
+  statusLine.className   = 'status-line';
   statusLine.textContent = 'Sending to inference engine…';
-  setWaveform(true);
+
+  showPlots(true);
+  showSkeleton(true);
+  resetPlots();
+
+  const t0 = performance.now();
 
   try {
     const response = await fetch('http://127.0.0.1:3636/predict', {
-      method: 'POST',
+      method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model_path: modelPath, signal_path: signalPath, transforms: currentTransform }),
+      body: JSON.stringify({
+        model_path:  modelPath,
+        signal_path: signalPath,
+        transforms:  currentTransform,
+      }),
     });
+
+    const elapsed = ((performance.now() - t0) / 1000).toFixed(2);
 
     if (!response.ok) {
       const err = await response.json().catch(() => ({ detail: 'Unknown error' }));
@@ -129,47 +188,66 @@ async function runDiagnosis() {
     const data = await response.json();
     const pct  = Math.round(data.confidence * 100);
 
-    // Success
-    resultCard.classList.add('success');
     setBadge('success', 'Complete');
-    animateValue(labelVal, data.label);
-    animateValue(confVal, pct + '%');
+    setFault(data.label);
+    animatePill('conf-val', pct + '%');
+    animatePill('time-val', elapsed + 's');
+    animatePill('idx-val',  data.segment_idx ?? '—');
 
     setTimeout(() => {
-      confBar.style.width = pct + '%';
-      confPct.textContent = pct + '%';
+      document.getElementById('conf-bar').style.width = pct + '%';
+      document.getElementById('conf-pct-label').textContent = pct + '%';
     }, 80);
 
-    statusLine.className = 'status-line';
-    statusLine.textContent = `${currentModel} · ${currentTransform.toUpperCase()} · ${new Date().toLocaleTimeString()}`;
-    setWaveform(false);
+    statusLine.className   = 'status-line';
+    statusLine.textContent =
+      `${currentModel} · ${currentTransform.toUpperCase()} · ${new Date().toLocaleTimeString()}`;
+
+    showSkeleton(false);
+    if (data.raw_plot && data.transform_plot) {
+      const fileName = signalPath.split(/[\\/]/).pop();
+      document.getElementById('raw-meta').textContent =
+        `seg ${data.segment_idx ?? '?'} · ${fileName}`;
+      document.getElementById('transform-meta').textContent =
+        currentTransform.toUpperCase();
+      setPlotImg('raw-plot',       data.raw_plot);
+      setPlotImg('transform-plot', data.transform_plot);
+    }
 
   } catch (err) {
-    resultCard.classList.add('error');
+    const elapsed = ((performance.now() - t0) / 1000).toFixed(2);
+    showSkeleton(false);
+    showPlots(false);
     setBadge('error', 'Error');
-    animateValue(labelVal, '—');
-    animateValue(confVal, '—');
-    confBar.style.width = '0%';
-    confPct.textContent = '';
-    statusLine.className = 'status-line error';
+    document.getElementById('fault-icon').className   = 'fault-icon';
+    document.getElementById('fault-icon').textContent = '✕';
+    document.getElementById('fault-name').textContent = 'Diagnosis failed';
+    document.getElementById('fault-code').textContent = '';
+    animatePill('conf-val', '—');
+    animatePill('time-val', elapsed + 's');
+    animatePill('idx-val',  '—');
+    document.getElementById('conf-bar').style.width = '0%';
+    document.getElementById('conf-pct-label').textContent = '';
+    statusLine.className   = 'status-line error';
     statusLine.textContent = err.message;
-    setWaveform(false);
+
   } finally {
-    isRunning = false;
+    isRunning    = false;
     btn.disabled = false;
     btn.querySelector('.btn-inner').innerHTML = `
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="5 3 19 12 5 21 5 3"/>
       </svg>
       Run diagnosis`;
   }
 }
 
-// ── Init ──────────────────────────────────────────────────────
+// ── Init ─────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('run-btn').addEventListener('click', createRipple);
-
   document.getElementById('signal-path').addEventListener('keydown', e => {
     if (e.key === 'Enter') runDiagnosis();
   });
+  document.getElementById('transform-sub').textContent = TRANSFORM_LABELS[currentTransform];
 });

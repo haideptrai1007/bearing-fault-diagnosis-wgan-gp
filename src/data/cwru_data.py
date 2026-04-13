@@ -109,6 +109,7 @@ def cwru_seperate(dataset):
 
     return normal, outer_race, inner_race, ball
 
+
 def cwru_inference(file, transform, type="DE", window_size=2048, overlap=0, img_size=128, normal=False, gray=True):
     mat_file = scipy.io.loadmat(file)
     images = []

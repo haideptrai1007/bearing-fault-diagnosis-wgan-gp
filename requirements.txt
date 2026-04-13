@@ -1,0 +1,6 @@
+fastapi
+uvicorn[standard]
+onnxruntime
+numpy
+scipy
+pywavelets==1.7.0
