@@ -1,3 +1,6 @@
 dataset/
-models/
+
+models/**/*.pth
+models/**/*.onnx
+
 __pycache__/
