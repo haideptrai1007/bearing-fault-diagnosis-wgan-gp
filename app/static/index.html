@@ -3,950 +3,174 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fault Diagnosis</title>
-  <style>
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  --red:           #fc3c44;
-  --red-glow:      rgba(252,60,68,0.32);
-  --pink:          #ff6b8a;
-  --purple:        #c62fa0;
-  --surface:       rgba(255,255,255,0.055);
-  --surface-hover: rgba(255,255,255,0.085);
-  --border:        rgba(255,255,255,0.08);
-  --border-bright: rgba(255,255,255,0.16);
-  --text-primary:  #ffffff;
-  --text-secondary:rgba(255,255,255,0.52);
-  --text-tertiary: rgba(255,255,255,0.28);
-  --bg:            #0a0a0f;
-  --success:       #30d158;
-  --success-soft:  rgba(48,209,88,0.13);
-  --danger-soft:   rgba(252,60,68,0.13);
-  --aside-w:       200px;
-}
-
-html, body {
-  height: 100%;
-  background: var(--bg);
-  font-family: 'Outfit', -apple-system, sans-serif;
-  color: var(--text-primary);
-  overflow: hidden;
-}
-
-/* ── Background ─────────────────────────────── */
-.bg-canvas {
-  position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
-}
-.bg-orb {
-  position: absolute; border-radius: 50%;
-  filter: blur(90px);
-  animation: orb-drift 18s ease-in-out infinite alternate;
-}
-.orb-1 {
-  width: 600px; height: 600px;
-  background: radial-gradient(circle, rgba(252,60,68,0.2) 0%, transparent 70%);
-  top: -200px; left: -150px; animation-delay: 0s;
-}
-.orb-2 {
-  width: 500px; height: 500px;
-  background: radial-gradient(circle, rgba(120,40,200,0.15) 0%, transparent 70%);
-  bottom: -100px; right: -100px; animation-delay: -7s;
-}
-.orb-3 {
-  width: 400px; height: 400px;
-  background: radial-gradient(circle, rgba(255,107,138,0.09) 0%, transparent 70%);
-  top: 40%; left: 50%; animation-delay: -13s;
-}
-@keyframes orb-drift {
-  0%   { transform: translate(0,0) scale(1); }
-  33%  { transform: translate(40px,-30px) scale(1.05); }
-  66%  { transform: translate(-20px,40px) scale(0.97); }
-  100% { transform: translate(30px,20px) scale(1.03); }
-}
-.noise-overlay {
-  position: fixed; inset: 0; z-index: 1; opacity: 0.03; pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 200px 200px;
-}
-
-/* ── 3-column layout ────────────────────────── */
-.layout {
-  position: relative; z-index: 2;
-  display: grid;
-  grid-template-columns: var(--aside-w) 1fr var(--aside-w);
-  grid-template-rows: 100vh;
-  height: 100vh;
-  overflow: hidden;
-}
-
-/* ── Left aside (controls) ──────────────────── */
-.panel {
-  grid-column: 1;
-  height: 100vh;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 1.25rem 1rem 2rem;
-  border-right: 0.5px solid var(--border);
-  background: rgba(10,10,15,0.7);
-  backdrop-filter: blur(32px);
-  -webkit-backdrop-filter: blur(32px);
-  display: flex;
-  flex-direction: column;
-  scrollbar-width: none;
-}
-.panel::-webkit-scrollbar { display: none; }
-
-/* ── Center main (plots) ────────────────────── */
-.plots-panel {
-  grid-column: 2;
-  height: 100vh;
-  overflow: hidden;
-  padding: 1.25rem 0.75rem;
-  display: flex;
-  flex-direction: column;
-}
-
-/* ── Right aside (results) ──────────────────── */
-.results-panel {
-  grid-column: 3;
-  height: 100vh;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 1.25rem 1rem 2rem;
-  border-left: 0.5px solid var(--border);
-  background: rgba(10,10,15,0.7);
-  backdrop-filter: blur(32px);
-  -webkit-backdrop-filter: blur(32px);
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  scrollbar-width: none;
-}
-.results-panel::-webkit-scrollbar { display: none; }
-
-/* ── Panel header ───────────────────────────── */
-.panel-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 1.5rem;
-  animation: fade-right 0.5s cubic-bezier(0.22,1,0.36,1) both;
-}
-
-.app-icon {
-  width: 36px; height: 36px; flex-shrink: 0;
-  background: linear-gradient(135deg, #fc3c44 0%, #ff6b8a 50%, #c62fa0 100%);
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 4px 16px var(--red-glow);
-  animation: icon-pulse 3.5s ease-in-out infinite;
-}
-.app-icon svg { width: 18px; height: 18px; }
-
-@keyframes icon-pulse {
-  0%,100% { box-shadow: 0 4px 16px rgba(252,60,68,0.32); }
-  50%      { box-shadow: 0 4px 24px rgba(252,60,68,0.52); }
-}
-
-.app-title {
-  font-size: 13px; font-weight: 700; letter-spacing: -0.2px;
-  background: linear-gradient(135deg, #fff 40%, rgba(255,255,255,0.6) 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.app-subtitle {
-  font-size: 10px; font-weight: 400;
-  color: var(--text-tertiary); margin-top: 1px;
-}
-
-/* ── Sections ───────────────────────────────── */
-.section {
-  margin-bottom: 1.1rem;
-  animation: fade-right 0.5s cubic-bezier(0.22,1,0.36,1) both;
-}
-.section:nth-child(2) { animation-delay: 0.06s; }
-.section:nth-child(3) { animation-delay: 0.12s; }
-.section:nth-child(4) { animation-delay: 0.18s; }
-
-.section-label {
-  font-size: 9px; font-weight: 600;
-  letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--text-tertiary); margin-bottom: 8px;
-}
-
-@keyframes fade-right {
-  from { opacity: 0; transform: translateX(-12px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-
-/* ── Button groups ───────────────────────────── */
-.btn-group { display: flex; gap: 5px; }
-.btn-group.col { flex-direction: column; }
-
-.tab-btn {
-  flex: 1; padding: 7px 8px;
-  border: 0.5px solid var(--border);
-  border-radius: 9px;
-  background: rgba(255,255,255,0.04);
-  font-family: 'Outfit', sans-serif;
-  font-size: 11.5px; font-weight: 500;
-  cursor: pointer; color: var(--text-secondary);
-  transition: all 0.18s cubic-bezier(0.22,1,0.36,1);
-  text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.tab-btn:hover {
-  border-color: var(--border-bright);
-  color: var(--text-primary);
-  background: var(--surface-hover);
-}
-.tab-btn:active { transform: scale(0.98); }
-.tab-btn.active {
-  background: linear-gradient(135deg, var(--red) 0%, var(--purple) 100%);
-  border-color: transparent; color: #fff; font-weight: 600;
-  box-shadow: 0 3px 14px var(--red-glow), inset 0 1px 0 rgba(255,255,255,0.15);
-}
-
-.transform-sub {
-  margin-top: 6px; font-size: 10px; color: var(--text-tertiary);
-}
-
-/* ── Input ───────────────────────────────────── */
-.input-wrap { position: relative; }
-.input-icon {
-  position: absolute; left: 10px; top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-tertiary); pointer-events: none;
-  display: flex; align-items: center;
-}
-.signal-input {
-  width: 100%; padding: 9px 10px 9px 30px;
-  background: rgba(255,255,255,0.05);
-  border: 0.5px solid var(--border);
-  border-radius: 9px;
-  font-family: 'Outfit', sans-serif;
-  font-size: 11px; color: var(--text-primary); outline: none;
-  transition: all 0.2s;
-}
-.signal-input::placeholder { color: var(--text-tertiary); font-size: 10.5px; }
-.signal-input:focus {
-  border-color: rgba(252,60,68,0.45);
-  background: rgba(255,255,255,0.07);
-  box-shadow: 0 0 0 3px rgba(252,60,68,0.09);
-}
-
-/* ── Run button ──────────────────────────────── */
-.run-btn {
-  width: 100%; padding: 11px;
-  border: none; border-radius: 10px;
-  background: linear-gradient(135deg, var(--red) 0%, #e0274f 50%, var(--purple) 100%);
-  background-size: 200% 200%;
-  font-family: 'Outfit', sans-serif;
-  font-size: 12.5px; font-weight: 600; color: #fff;
-  cursor: pointer; position: relative; overflow: hidden;
-  transition: transform 0.18s cubic-bezier(0.22,1,0.36,1), box-shadow 0.18s;
-  box-shadow: 0 4px 18px var(--red-glow), inset 0 1px 0 rgba(255,255,255,0.15);
-  animation: gradient-shift 5s ease infinite;
-}
-@keyframes gradient-shift {
-  0%,100% { background-position: 0% 50%; }
-  50%      { background-position: 100% 50%; }
-}
-.run-btn::before {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(to bottom, rgba(255,255,255,0.10) 0%, transparent 100%);
-  pointer-events: none;
-}
-.run-btn:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 24px var(--red-glow), inset 0 1px 0 rgba(255,255,255,0.18);
-}
-.run-btn:active:not(:disabled) { transform: scale(0.99); }
-.run-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-.btn-inner { display: flex; align-items: center; justify-content: center; gap: 7px; }
-
-/* ── Spinner ─────────────────────────────────── */
-.spinner {
-  width: 13px; height: 13px;
-  border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff;
-  border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* ── Ripple ──────────────────────────────────── */
-.ripple {
-  position: absolute; border-radius: 50%;
-  background: rgba(255,255,255,0.2);
-  transform: scale(0);
-  animation: ripple-expand 0.55s linear;
-  pointer-events: none;
-}
-@keyframes ripple-expand { to { transform: scale(4); opacity: 0; } }
-
-/* ── Right panel - results ───────────────────── */
-.results-header {
-  margin-bottom: 1.25rem;
-  animation: fade-left 0.5s cubic-bezier(0.22,1,0.36,1) both;
-}
-@keyframes fade-left {
-  from { opacity: 0; transform: translateX(12px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-.results-title {
-  font-size: 9px; font-weight: 600;
-  letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--text-tertiary); margin-bottom: 4px;
-}
-
-/* Fault display */
-.fault-display {
-  background: var(--surface);
-  border: 0.5px solid var(--border);
-  border-radius: 12px;
-  padding: 12px;
-  margin-bottom: 8px;
-  animation: fade-left 0.5s cubic-bezier(0.22,1,0.36,1) 0.06s both;
-}
-
-.fault-top {
-  display: flex; align-items: center; gap: 8px;
-  margin-bottom: 8px;
-}
-.fault-icon {
-  width: 34px; height: 34px; flex-shrink: 0;
-  border-radius: 9px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 16px;
-  background: rgba(255,255,255,0.06);
-  border: 0.5px solid var(--border);
-  transition: all 0.4s cubic-bezier(0.22,1,0.36,1);
-}
-.fault-icon.normal { background: rgba(48,209,88,0.12);  border-color: rgba(48,209,88,0.25); }
-.fault-icon.outer  { background: rgba(252,60,68,0.12);   border-color: rgba(252,60,68,0.25); }
-.fault-icon.inner  { background: rgba(255,159,10,0.12);  border-color: rgba(255,159,10,0.25); }
-.fault-icon.ball   { background: rgba(100,120,255,0.12); border-color: rgba(100,120,255,0.25); }
-
-.fault-info { flex: 1; min-width: 0; }
-.fault-name {
-  font-size: 12px; font-weight: 600;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  transition: all 0.3s;
-}
-.fault-code { font-size: 10px; color: var(--text-tertiary); margin-top: 1px; }
-
-/* Badge */
-.badge {
-  font-size: 9px; font-weight: 600; padding: 2px 8px;
-  border-radius: 20px; letter-spacing: 0.04em; white-space: nowrap;
-}
-.badge-success { background: var(--success-soft); color: var(--success); border: 0.5px solid rgba(48,209,88,0.2); }
-.badge-pending { background: rgba(255,255,255,0.06); color: var(--text-secondary); border: 0.5px solid var(--border); }
-.badge-error   { background: var(--danger-soft); color: var(--red); border: 0.5px solid rgba(252,60,68,0.2); }
-.badge-running { background: rgba(255,159,10,0.12); color: #ff9f0a; border: 0.5px solid rgba(255,159,10,0.2); }
-
-/* Confidence bar inside fault card */
-.fault-bar-wrap { margin-top: 4px; }
-.fault-bar-label {
-  display: flex; justify-content: space-between;
-  font-size: 9px; color: var(--text-tertiary); margin-bottom: 5px;
-}
-.bar-track {
-  height: 3px; background: rgba(255,255,255,0.07);
-  border-radius: 3px; overflow: hidden;
-}
-.bar-fill {
-  height: 100%; border-radius: 3px;
-  background: linear-gradient(90deg, var(--red) 0%, var(--pink) 100%);
-  width: 0%; transition: width 0.7s cubic-bezier(0.22,1,0.36,1);
-  box-shadow: 0 0 6px var(--red-glow);
-}
-
-/* Metric pills */
-.metrics-col {
-  display: flex; flex-direction: column;
-  gap: 6px; margin-bottom: 8px;
-  animation: fade-left 0.5s cubic-bezier(0.22,1,0.36,1) 0.12s both;
-}
-.metric-pill {
-  background: rgba(255,255,255,0.04);
-  border: 0.5px solid var(--border);
-  border-radius: 9px; padding: 9px 10px;
-  display: flex; align-items: center; justify-content: space-between;
-}
-.metric-pill-label {
-  font-size: 9px; font-weight: 600;
-  letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--text-tertiary);
-}
-.metric-pill-value {
-  font-size: 16px; font-weight: 700; letter-spacing: -0.5px;
-  color: var(--text-primary); line-height: 1;
-}
-.metric-pill-value.accent {
-  background: linear-gradient(135deg, var(--red), var(--pink));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Status */
-.status-line {
-  font-size: 10px; color: var(--text-tertiary);
-  min-height: 14px; transition: color 0.2s;
-  animation: fade-left 0.5s cubic-bezier(0.22,1,0.36,1) 0.18s both;
-  word-break: break-all;
-}
-.status-line.error { color: rgba(252,60,68,0.6); }
-
-/* Pop animation */
-@keyframes number-pop {
-  0%  { transform: scale(0.7); opacity: 0; }
-  60% { transform: scale(1.1); }
-  100%{ transform: scale(1);   opacity: 1; }
-}
-.pop { animation: number-pop 0.35s cubic-bezier(0.22,1,0.36,1) both; }
-
-/* ── Center: Empty state ─────────────────────── */
-.empty-state {
-  flex: 1; display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 14px;
-}
-.empty-state.hidden { display: none; }
-
-.empty-waveform {
-  display: flex; align-items: center; gap: 5px; height: 48px;
-}
-.empty-waveform .wave-bar {
-  width: 4px; border-radius: 2px;
-  background: linear-gradient(to top, var(--red), var(--pink));
-  animation: wave-animate 1.5s ease-in-out infinite;
-  opacity: 0.2;
-}
-.empty-waveform .wave-bar:nth-child(1) { height: 14px; animation-delay: 0.0s; }
-.empty-waveform .wave-bar:nth-child(2) { height: 26px; animation-delay: 0.1s; }
-.empty-waveform .wave-bar:nth-child(3) { height: 40px; animation-delay: 0.2s; }
-.empty-waveform .wave-bar:nth-child(4) { height: 48px; animation-delay: 0.3s; }
-.empty-waveform .wave-bar:nth-child(5) { height: 36px; animation-delay: 0.25s;}
-.empty-waveform .wave-bar:nth-child(6) { height: 48px; animation-delay: 0.15s;}
-.empty-waveform .wave-bar:nth-child(7) { height: 32px; animation-delay: 0.05s;}
-.empty-waveform .wave-bar:nth-child(8) { height: 20px; animation-delay: 0.35s;}
-.empty-waveform .wave-bar:nth-child(9) { height: 10px; animation-delay: 0.4s; }
-
-@keyframes wave-animate {
-  0%,100% { transform: scaleY(0.3); opacity: 0.15; }
-  50%      { transform: scaleY(1);  opacity: 0.45; }
-}
-.empty-text { font-size: 13px; font-weight: 500; color: var(--text-secondary); text-align: center; }
-.empty-sub  { font-size: 11px; color: var(--text-tertiary); text-align: center; }
-
-/* ── Center: Plots area ─────────────────────── */
-.plots-area {
-  display: none; flex-direction: column;
-  gap: 12px; flex: 1; min-height: 0;
-}
-.plots-area.visible { display: flex; }
-
-/* Plot card */
-.plot-card {
-  background: var(--surface);
-  border: 0.5px solid var(--border);
-  border-radius: 16px;
-  overflow: hidden;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  animation: fade-up 0.45s cubic-bezier(0.22,1,0.36,1) both;
-  display: flex; flex-direction: column;
-  flex: 1; min-height: 0;
-}
-.plot-card:nth-child(2) { animation-delay: 0.1s; }
-
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.plot-card-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 10px 14px;
-  border-bottom: 0.5px solid var(--border);
-  flex-shrink: 0;
-}
-.plot-card-label {
-  display: flex; align-items: center; gap: 6px;
-  font-size: 10px; font-weight: 600;
-  letter-spacing: 0.09em; text-transform: uppercase;
-  color: var(--text-tertiary);
-}
-.plot-card-label svg { opacity: 0.6; flex-shrink: 0; }
-.plot-card-meta { font-size: 10px; color: var(--text-tertiary); }
-
-.plot-img-wrap {
-  position: relative; background: #0c0c14;
-  flex: 1; min-height: 0;
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden;
-}
-
-.plot-skeleton {
-  position: absolute; inset: 0;
-  background: linear-gradient(90deg,
-    rgba(255,255,255,0.03) 0%,
-    rgba(255,255,255,0.07) 50%,
-    rgba(255,255,255,0.03) 100%);
-  background-size: 200% 100%;
-  animation: shimmer 1.4s ease-in-out infinite;
-}
-.plot-skeleton.hidden { display: none; }
-@keyframes shimmer {
-  0%   { background-position: -200% 0; }
-  100% { background-position:  200% 0; }
-}
-
-.plot-img {
-  width: 100%; height: 100%;
-  object-fit: contain;
-  display: block;
-  opacity: 0; transition: opacity 0.45s ease;
-}
-.plot-img.loaded { opacity: 1; }
-
-</style>
+  <title>Vibration Fault Diagnosis · iOS 26</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/Style.css" />
 </head>
 <body>
 
-  <div class="bg-canvas">
-    <div class="bg-orb orb-1"></div>
-    <div class="bg-orb orb-2"></div>
-    <div class="bg-orb orb-3"></div>
+  <div class="ambient-bg" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="grain"></div>
   </div>
-  <div class="noise-overlay"></div>
 
-  <div class="layout">
+  <main class="app-shell">
 
-    <!-- ══════════ LEFT ASIDE — Controls ══════════ -->
-    <aside class="panel">
-
-      <div class="panel-header">
-        <div class="app-icon">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M2 12 Q4 6 6 12 Q8 18 10 12 Q12 6 14 12 Q16 18 18 12 Q20 6 22 12"
-              fill="none" stroke="white" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <div>
-          <h1 class="app-title">Fault Diagnosis</h1>
-          <p class="app-subtitle">CWRU Bearing Dataset</p>
-        </div>
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <h1 class="app-title">Vibration <em>Diagnosis</em></h1>
+        <p class="app-subtitle">CWRU bearing fault · 8 models · 2 transforms</p>
       </div>
+      <span class="status-pill" id="connectionStatus">
+        <span class="status-dot"></span>
+        <span class="status-text">Ready</span>
+      </span>
+    </header>
 
-      <div class="section">
-        <div class="section-label">Transform</div>
-        <div class="btn-group">
-          <button class="tab-btn active" id="tab-cwt"  onclick="switchTransform('cwt')">CWT</button>
-          <button class="tab-btn"        id="tab-stft" onclick="switchTransform('stft')">STFT</button>
-        </div>
-        <div class="transform-sub" id="transform-sub">Continuous Wavelet Transform · Scalogram</div>
-      </div>
+    <!-- =================== MAIN TWO-COLUMN LAYOUT =================== -->
+    <div class="main-layout">
 
-      <div class="section">
-        <div class="section-label">Model</div>
-        <div class="btn-group col">
-          <button class="tab-btn active" id="btn-MobileOneS0" onclick="selectModel('MobileOneS0')">MobileOne S0</button>
-          <button class="tab-btn"        id="btn-MobileNetV4" onclick="selectModel('MobileNetV4')">MobileNet V4</button>
-          <button class="tab-btn"        id="btn-GhostNetV2"  onclick="selectModel('GhostNetV2')">GhostNet V2</button>
-          <button class="tab-btn"        id="btn-EdgeNeXtXXS" onclick="selectModel('EdgeNeXtXXS')">EdgeNeXt XXS</button>
-        </div>
-      </div>
+      <!-- LEFT COLUMN: plots stacked -->
+      <div class="left-col">
 
-      <div class="section">
-        <div class="section-label">Signal file</div>
-        <div class="input-wrap">
-          <span class="input-icon">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <section class="glass-card plot-card">
+          <div class="card-header">
+            <div class="card-header-left">
+              <span class="card-eyebrow">01 · Time Domain</span>
+              <h2 class="card-title">Raw Signal</h2>
+            </div>
+            <span class="chip chip-idle" id="rawChip">Waiting</span>
+          </div>
+          <div class="plot-frame" id="rawPlotFrame">
+            <div class="plot-placeholder">
+              <svg viewBox="0 0 120 36" aria-hidden="true">
+                <polyline points="0,18 10,16 20,20 30,10 40,26 50,13 60,22 70,8 80,24 90,16 100,20 110,18 120,18"
+                  fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+              </svg>
+              <span>Raw vibration signal</span>
+            </div>
+            <img class="plot-img" id="rawPlot" alt="Raw signal" />
+          </div>
+        </section>
+
+        <section class="glass-card plot-card">
+          <div class="card-header">
+            <div class="card-header-left">
+              <span class="card-eyebrow">02 · Short-Time FT</span>
+              <h2 class="card-title">Spectrogram <span class="card-subtag">STFT</span></h2>
+            </div>
+            <span class="chip chip-idle" id="spectrogramChip">Waiting</span>
+          </div>
+          <div class="plot-frame" id="spectrogramPlotFrame">
+            <div class="plot-placeholder">
+              <svg viewBox="0 0 60 36" aria-hidden="true">
+                <rect x="4"  y="20" width="5" height="12" rx="1"/>
+                <rect x="12" y="12" width="5" height="20" rx="1"/>
+                <rect x="20" y="6"  width="5" height="26" rx="1"/>
+                <rect x="28" y="16" width="5" height="16" rx="1"/>
+                <rect x="36" y="8"  width="5" height="24" rx="1"/>
+                <rect x="44" y="18" width="5" height="14" rx="1"/>
+                <rect x="52" y="22" width="5" height="10" rx="1"/>
+              </svg>
+              <span>Frequency over time</span>
+            </div>
+            <img class="plot-img" id="spectrogramPlot" alt="Spectrogram" />
+          </div>
+        </section>
+
+        <section class="glass-card plot-card">
+          <div class="card-header">
+            <div class="card-header-left">
+              <span class="card-eyebrow">03 · Wavelet</span>
+              <h2 class="card-title">Scalogram <span class="card-subtag">CWT</span></h2>
+            </div>
+            <span class="chip chip-idle" id="scalogramChip">Waiting</span>
+          </div>
+          <div class="plot-frame" id="scalogramPlotFrame">
+            <div class="plot-placeholder">
+              <svg viewBox="0 0 60 36" aria-hidden="true">
+                <path d="M2,18 Q10,6 18,18 T34,18 T50,18 T58,18" fill="none" stroke="currentColor" stroke-width="1.2"/>
+                <path d="M2,26 Q10,18 18,26 T34,26 T50,26 T58,26" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+                <path d="M2,10 Q10,2  18,10 T34,10 T50,10 T58,10" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+              </svg>
+              <span>Multi-scale time-frequency</span>
+            </div>
+            <img class="plot-img" id="scalogramPlot" alt="Scalogram" />
+          </div>
+        </section>
+
+      </div><!-- /left-col -->
+
+      <!-- RIGHT COLUMN: input + model grid -->
+      <div class="right-col">
+
+        <!-- Input + Run -->
+        <section class="glass-card control-card">
+          <div class="card-eyebrow" style="margin-bottom:8px">Input data path</div>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
               <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
               <polyline points="13 2 13 9 20 9"/>
             </svg>
-          </span>
-          <input class="signal-input" type="text" id="signal-path"
-            placeholder="D:\dataset\97.mat" autocomplete="off" spellcheck="false"/>
-        </div>
-      </div>
+            <input id="signalPath" type="text" placeholder="/path/to/signal.mat" autocomplete="off" spellcheck="false" />
+          </div>
 
-      <button class="run-btn" id="run-btn" onclick="runDiagnosis()">
-        <div class="btn-inner">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="5 3 19 12 5 21 5 3"/>
-          </svg>
-          Run diagnosis
-        </div>
-      </button>
-
-    </aside>
-
-    <!-- ══════════ CENTER MAIN — Plots ══════════ -->
-    <main class="plots-panel">
-
-      <div class="empty-state" id="empty-state">
-        <div class="empty-waveform">
-          <div class="wave-bar"></div><div class="wave-bar"></div>
-          <div class="wave-bar"></div><div class="wave-bar"></div>
-          <div class="wave-bar"></div><div class="wave-bar"></div>
-          <div class="wave-bar"></div><div class="wave-bar"></div>
-          <div class="wave-bar"></div>
-        </div>
-        <p class="empty-text">Run a diagnosis to see signal plots</p>
-        <p class="empty-sub">Raw signal and transform will appear here</p>
-      </div>
-
-      <div class="plots-area" id="plots-area">
-
-        <div class="plot-card">
-          <div class="plot-card-header">
-            <div class="plot-card-label">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2" stroke-linecap="round">
-                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-              </svg>
-              Raw signal
+          <div class="control-bottom">
+            <div class="progress-strip" id="progressStrip" hidden>
+              <div class="progress-message" id="progressMessage">Initializing…</div>
+              <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
             </div>
-            <div class="plot-card-meta" id="raw-meta"></div>
+            <button class="run-btn" id="runBtn">
+              <span class="run-btn-bg"></span>
+              <span class="run-btn-content">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="6 4 20 12 6 20 6 4"/>
+                </svg>
+                <span class="run-btn-text">Run</span>
+              </span>
+            </button>
           </div>
-          <div class="plot-img-wrap">
-            <div class="plot-skeleton" id="raw-skeleton"></div>
-            <img id="raw-plot" class="plot-img" alt="raw signal" />
-          </div>
-        </div>
+        </section>
 
-        <div class="plot-card">
-          <div class="plot-card-header">
-            <div class="plot-card-label">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2" stroke-linecap="round">
-                <rect x="3" y="3" width="18" height="18" rx="2"/>
-                <path d="M3 9h18M3 15h18M9 3v18"/>
-              </svg>
-              <span id="transform-plot-label">Scalogram (CWT)</span>
+        <!-- Model results -->
+        <section class="glass-card results-card">
+          <div class="results-top">
+            <div>
+              <span class="card-eyebrow">04 · Inference</span>
+              <h2 class="card-title" style="margin-top:2px">Model Predictions</h2>
             </div>
-            <div class="plot-card-meta" id="transform-meta"></div>
+            <div class="ground-truth-pill" id="groundTruthPill" hidden>
+              <span class="gt-label">Ground Truth</span>
+              <span class="gt-value" id="groundTruthValue">—</span>
+            </div>
           </div>
-          <div class="plot-img-wrap">
-            <div class="plot-skeleton" id="transform-skeleton"></div>
-            <img id="transform-plot" class="plot-img" alt="transform" />
+
+          <!-- Arch column headers -->
+          <div class="arch-headers" id="archHeaders">
+            <div class="arch-header-cell">MobileNet V4</div>
+            <div class="arch-header-cell">MobileOne S0</div>
+            <div class="arch-header-cell">EdgeNeXt XXS</div>
+            <div class="arch-header-cell">GhostNet V3</div>
           </div>
-        </div>
 
-      </div>
+          <!-- 4-col × 2-row model grid -->
+          <div class="models-grid" id="modelsGrid"></div>
+        </section>
 
-    </main>
+      </div><!-- /right-col -->
+    </div><!-- /main-layout -->
 
-    <!-- ══════════ RIGHT ASIDE — Results ══════════ -->
-    <aside class="results-panel">
+    <footer class="app-footer">
+      <span>Built with FastAPI · ONNX Runtime · Server-Sent Events</span>
+    </footer>
 
-      <div class="results-header">
-        <div class="results-title">Diagnosis result</div>
-      </div>
+  </main>
 
-      <!-- Fault card -->
-      <div class="fault-display" id="fault-display">
-        <div class="fault-top">
-          <div class="fault-icon" id="fault-icon">?</div>
-          <div class="fault-info">
-            <div class="fault-name" id="fault-name">—</div>
-            <div class="fault-code" id="fault-code">Awaiting signal</div>
-          </div>
-        </div>
-        <span class="badge badge-pending" id="result-badge">Pending</span>
-        <div class="fault-bar-wrap">
-          <div class="fault-bar-label">
-            <span>Confidence</span>
-            <span id="conf-pct-label"></span>
-          </div>
-          <div class="bar-track">
-            <div class="bar-fill" id="conf-bar"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Metrics -->
-      <div class="metrics-col">
-        <div class="metric-pill">
-          <div class="metric-pill-label">Confidence</div>
-          <div class="metric-pill-value accent" id="conf-val">—</div>
-        </div>
-        <div class="metric-pill">
-          <div class="metric-pill-label">Inference</div>
-          <div class="metric-pill-value" id="time-val">—</div>
-        </div>
-        <div class="metric-pill">
-          <div class="metric-pill-label">Segment</div>
-          <div class="metric-pill-value" id="idx-val">—</div>
-        </div>
-      </div>
-
-      <div class="status-line" id="status-line"></div>
-
-    </aside>
-
-  </div>
-
-  <script>
-const MODEL_KEYS = ['MobileOneS0', 'MobileNetV4', 'GhostNetV2', 'EdgeNeXtXXS'];
-
-const MODEL_PATHS = {
-  cwt: {
-    MobileOneS0: "D:\\Capstone\\models\\ONNX\\CNN\\SCALOGRAM\\MobileOneS0\\best_model.onnx",
-    MobileNetV4: "D:\\Capstone\\models\\ONNX\\CNN\\SCALOGRAM\\MobileNetV4\\best_model.onnx",
-    GhostNetV2:  "D:\\Capstone\\models\\ONNX\\CNN\\SCALOGRAM\\GhostNetV2\\best_model.onnx",
-    EdgeNeXtXXS: "D:\\Capstone\\models\\ONNX\\CNN\\SCALOGRAM\\EdgenextXXS\\best_model.onnx",
-  },
-  stft: {
-    MobileOneS0: "D:\\Capstone\\models\\ONNX\\CNN\\SPECTROGRAM\\MobileOneS0\\best_model.onnx",
-    MobileNetV4: "D:\\Capstone\\models\\ONNX\\CNN\\SPECTROGRAM\\MobileNetV4\\best_model.onnx",
-    GhostNetV2:  "D:\\Capstone\\models\\ONNX\\CNN\\SPECTROGRAM\\GhostNetV2\\best_model.onnx",
-    EdgeNeXtXXS: "D:\\Capstone\\models\\ONNX\\CNN\\SPECTROGRAM\\EdgenextXXS\\best_model.onnx",
-  },
-};
-
-const FAULT_MAP = {
-  0: { name: 'Normal condition', code: 'Class 0 — No fault detected',      icon: '✓', cls: 'normal' },
-  1: { name: 'Outer race fault', code: 'Class 1 — Outer race defect',      icon: '⚠', cls: 'outer'  },
-  2: { name: 'Inner race fault', code: 'Class 2 — Inner race defect',      icon: '⚡', cls: 'inner'  },
-  3: { name: 'Ball fault',       code: 'Class 3 — Rolling element defect', icon: '◉', cls: 'ball'   },
-};
-
-const TRANSFORM_LABELS = {
-  cwt:  'Continuous Wavelet Transform · Scalogram',
-  stft: 'Short-Time Fourier Transform · Spectrogram',
-};
-
-let currentTransform = 'cwt';
-let currentModel     = 'MobileOneS0';
-let isRunning        = false;
-
-// ── Transform ────────────────────────────────────────────────
-function switchTransform(t) {
-  if (currentTransform === t) return;
-  currentTransform = t;
-  document.getElementById('tab-cwt').classList.toggle('active',  t === 'cwt');
-  document.getElementById('tab-stft').classList.toggle('active', t === 'stft');
-  document.getElementById('transform-sub').textContent = TRANSFORM_LABELS[t];
-  document.getElementById('transform-plot-label').textContent =
-    t === 'cwt' ? 'Scalogram (CWT)' : 'Spectrogram (STFT)';
-}
-
-// ── Model ────────────────────────────────────────────────────
-function selectModel(m) {
-  if (currentModel === m) return;
-  currentModel = m;
-  MODEL_KEYS.forEach(name =>
-    document.getElementById('btn-' + name).classList.toggle('active', name === m)
-  );
-}
-
-// ── Ripple ───────────────────────────────────────────────────
-function createRipple(e) {
-  const btn  = e.currentTarget;
-  const rect = btn.getBoundingClientRect();
-  const size = Math.max(rect.width, rect.height) * 2;
-  const rip  = document.createElement('span');
-  rip.className = 'ripple';
-  rip.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-rect.left-size/2}px;top:${e.clientY-rect.top-size/2}px`;
-  btn.appendChild(rip);
-  rip.addEventListener('animationend', () => rip.remove());
-}
-
-// ── Helpers ──────────────────────────────────────────────────
-function setBadge(type, text) {
-  const el = document.getElementById('result-badge');
-  el.className   = 'badge badge-' + type;
-  el.textContent = text;
-}
-
-function animatePill(id, value) {
-  const el = document.getElementById(id);
-  el.classList.remove('pop');
-  void el.offsetWidth;
-  el.textContent = value;
-  el.classList.add('pop');
-}
-
-function setFault(label) {
-  const f    = FAULT_MAP[label];
-  const icon = document.getElementById('fault-icon');
-  const name = document.getElementById('fault-name');
-  const code = document.getElementById('fault-code');
-  icon.className   = 'fault-icon ' + (f ? f.cls : '');
-  icon.textContent = f ? f.icon : '?';
-  name.classList.remove('pop');
-  void name.offsetWidth;
-  name.textContent = f ? f.name : '—';
-  name.classList.add('pop');
-  code.textContent = f ? f.code : 'Unknown class';
-}
-
-function showSkeleton(show) {
-  ['raw-skeleton', 'transform-skeleton'].forEach(id =>
-    document.getElementById(id).classList.toggle('hidden', !show)
-  );
-}
-
-function setPlotImg(id, b64) {
-  const img = document.getElementById(id);
-  img.classList.remove('loaded');
-  img.src = 'data:image/png;base64,' + b64;
-  img.onload = () => img.classList.add('loaded');
-}
-
-function showPlots(show) {
-  document.getElementById('empty-state').classList.toggle('hidden', show);
-  document.getElementById('plots-area').classList.toggle('visible', show);
-}
-
-function resetPlots() {
-  ['raw-plot', 'transform-plot'].forEach(id => {
-    const img = document.getElementById(id);
-    img.src = ''; img.classList.remove('loaded');
-  });
-  document.getElementById('raw-meta').textContent       = '';
-  document.getElementById('transform-meta').textContent = '';
-}
-
-// ── Run ──────────────────────────────────────────────────────
-async function runDiagnosis() {
-  if (isRunning) return;
-
-  const modelPath  = MODEL_PATHS[currentTransform][currentModel];
-  const signalPath = document.getElementById('signal-path').value.trim();
-  const btn        = document.getElementById('run-btn');
-  const statusLine = document.getElementById('status-line');
-
-  if (!signalPath) {
-    setBadge('error', 'Error');
-    setFault(null);
-    document.getElementById('fault-code').textContent = 'Please fill in the signal file path';
-    animatePill('conf-val', '—');
-    animatePill('time-val', '—');
-    animatePill('idx-val',  '—');
-    document.getElementById('conf-bar').style.width = '0%';
-    document.getElementById('conf-pct-label').textContent = '';
-    statusLine.className   = 'status-line error';
-    statusLine.textContent = 'Signal path is required.';
-    return;
-  }
-
-  // Loading
-  isRunning    = true;
-  btn.disabled = true;
-  btn.querySelector('.btn-inner').innerHTML =
-    `<span class="spinner"></span>Analyzing…`;
-
-  setBadge('running', 'Running');
-  document.getElementById('fault-icon').className   = 'fault-icon';
-  document.getElementById('fault-icon').textContent = '…';
-  document.getElementById('fault-name').textContent = 'Analyzing…';
-  document.getElementById('fault-code').textContent = `${currentModel} · ${currentTransform.toUpperCase()}`;
-  animatePill('conf-val', '—');
-  animatePill('time-val', '—');
-  animatePill('idx-val',  '—');
-  document.getElementById('conf-bar').style.width = '0%';
-  document.getElementById('conf-pct-label').textContent = '';
-  statusLine.className   = 'status-line';
-  statusLine.textContent = 'Sending to inference engine…';
-
-  showPlots(true);
-  showSkeleton(true);
-  resetPlots();
-
-  const t0 = performance.now();
-
-  try {
-    const response = await fetch('http://127.0.0.1:3636/predict', {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model_path:  modelPath,
-        signal_path: signalPath,
-        transforms:  currentTransform,
-      }),
-    });
-
-    const elapsed = ((performance.now() - t0) / 1000).toFixed(2);
-
-    if (!response.ok) {
-      const err = await response.json().catch(() => ({ detail: 'Unknown error' }));
-      throw new Error(err.detail || `HTTP ${response.status}`);
-    }
-
-    const data = await response.json();
-    const pct  = Math.round(data.confidence * 100);
-
-    setBadge('success', 'Complete');
-    setFault(data.label);
-    animatePill('conf-val', pct + '%');
-    animatePill('time-val', elapsed + 's');
-    animatePill('idx-val',  data.segment_idx ?? '—');
-
-    setTimeout(() => {
-      document.getElementById('conf-bar').style.width = pct + '%';
-      document.getElementById('conf-pct-label').textContent = pct + '%';
-    }, 80);
-
-    statusLine.className   = 'status-line';
-    statusLine.textContent =
-      `${currentModel} · ${currentTransform.toUpperCase()} · ${new Date().toLocaleTimeString()}`;
-
-    showSkeleton(false);
-    if (data.raw_plot && data.transform_plot) {
-      const fileName = signalPath.split(/[\\/]/).pop();
-      document.getElementById('raw-meta').textContent =
-        `seg ${data.segment_idx ?? '?'} · ${fileName}`;
-      document.getElementById('transform-meta').textContent =
-        currentTransform.toUpperCase();
-      setPlotImg('raw-plot',       data.raw_plot);
-      setPlotImg('transform-plot', data.transform_plot);
-    }
-
-  } catch (err) {
-    const elapsed = ((performance.now() - t0) / 1000).toFixed(2);
-    showSkeleton(false);
-    showPlots(false);
-    setBadge('error', 'Error');
-    document.getElementById('fault-icon').className   = 'fault-icon';
-    document.getElementById('fault-icon').textContent = '✕';
-    document.getElementById('fault-name').textContent = 'Diagnosis failed';
-    document.getElementById('fault-code').textContent = '';
-    animatePill('conf-val', '—');
-    animatePill('time-val', elapsed + 's');
-    animatePill('idx-val',  '—');
-    document.getElementById('conf-bar').style.width = '0%';
-    document.getElementById('conf-pct-label').textContent = '';
-    statusLine.className   = 'status-line error';
-    statusLine.textContent = err.message;
-
-  } finally {
-    isRunning    = false;
-    btn.disabled = false;
-    btn.querySelector('.btn-inner').innerHTML = `
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <polygon points="5 3 19 12 5 21 5 3"/>
-      </svg>
-      Run diagnosis`;
-  }
-}
-
-// ── Init ─────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('run-btn').addEventListener('click', createRipple);
-  document.getElementById('signal-path').addEventListener('keydown', e => {
-    if (e.key === 'Enter') runDiagnosis();
-  });
-  document.getElementById('transform-sub').textContent = TRANSFORM_LABELS[currentTransform];
-});
-
-</script>
+  <script src="/static/App.js"></script>
 </body>
 </html>

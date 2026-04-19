@@ -112,7 +112,8 @@ def cwru_seperate(dataset):
 
 def cwru_inference(file, transform, type="DE", window_size=2048, overlap=0, img_size=128, normal=False, gray=True):
     mat_file = scipy.io.loadmat(file)
-    images = []
+    labels = {"OR", "IR", "B", "Normal"}
+    images, grouth_truths = [], []
     for i, j in mat_file.items():
         if type in i:
             signal = j.squeeze()
@@ -123,5 +124,6 @@ def cwru_inference(file, transform, type="DE", window_size=2048, overlap=0, img_
             for window in windows:
                 img = transform(window, img_size=img_size, gray=gray)
                 images.append(img)
+                grouth_truths.extend([part for part in file.split("\\") if part in labels])
 
-    return np.array(images)
+    return np.array(images), np.array(grouth_truths)
