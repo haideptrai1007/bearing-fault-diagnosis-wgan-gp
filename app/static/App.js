@@ -1,14 +1,11 @@
 /* ============================================================
-   Vibration Diagnosis — App.js
-   SSE streaming: plots appear first, then each model result
-   lands in place as it completes on the backend.
+   Vibration Diagnosis — App.js  (non-streaming)
+   Single POST /predict-all → all plots + 8 results at once.
    ============================================================ */
 
-const ARCHITECTURES = ['MobileNetV4', 'MobileOneS0', 'EdgeNeXtXXS', 'GhostNetV3'];
+const ARCHITECTURES = ['MobileNetV4', 'TinyNetD', 'EdgeNeXtXXS', 'GhostNetV3'];
 const TRANSFORMS    = ['scalogram', 'spectrogram'];
 
-// Display names — order matches LABEL_CLASSES in inference.py.
-// 0=Normal  1=IR  2=OR  3=B
 const LABEL_NAMES = {
   0: 'Normal Condition',
   1: 'Outer Race Fault',
@@ -16,23 +13,24 @@ const LABEL_NAMES = {
   3: 'Ball Fault',
 };
 
-const fmtLabel = (n) => {
+function fmtLabel(n) {
   if (n === null || n === undefined) return '—';
-  // Already a readable string (e.g. ground truth passed as string)
   if (typeof n === 'string') return n;
   if (n < 0) return '—';
-  return LABEL_NAMES[n] !== undefined ? LABEL_NAMES[n] : `Class ${n}`;
-};
+  return LABEL_NAMES[n] !== undefined ? LABEL_NAMES[n] : 'Class ' + n;
+}
 
-/* ------------------------------------------------------------------ */
-/* DOM references                                                       */
-/* ------------------------------------------------------------------ */
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, function(c) {
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+
+/* ── DOM refs ── */
 const el = {
   signalPath:       document.getElementById('signalPath'),
   runBtn:           document.getElementById('runBtn'),
   runBtnText:       document.querySelector('.run-btn-text'),
-  connectionStatus: document.getElementById('connectionStatus'),
-  statusText:       document.querySelector('#connectionStatus .status-text'),
 
   rawFrame:         document.getElementById('rawPlotFrame'),
   rawImg:           document.getElementById('rawPlot'),
@@ -55,12 +53,9 @@ const el = {
   gtValue:          document.getElementById('groundTruthValue'),
 };
 
-/* ------------------------------------------------------------------ */
-/* Build the 4-column x 2-row result grid once on page load            */
-/* ------------------------------------------------------------------ */
+/* ── Build 4×2 grid on load ── */
 function buildGrid() {
   el.modelsGrid.innerHTML = '';
-  // Row 1: scalogram for all 4 archs, Row 2: spectrogram for all 4 archs
   TRANSFORMS.forEach(function(t) {
     ARCHITECTURES.forEach(function(arch) {
       var card = document.createElement('article');
@@ -69,7 +64,9 @@ function buildGrid() {
       card.setAttribute('data-transform', t);
       card.innerHTML =
         '<header class="result-head">' +
-          '<span class="result-transform">' + (t === 'scalogram' ? 'Scalogram · CWT' : 'Spectrogram · STFT') + '</span>' +
+          '<span class="result-transform">' +
+            (t === 'scalogram' ? 'Scalogram \xb7 CWT' : 'Spectrogram \xb7 STFT') +
+          '</span>' +
           '<span class="result-badge waiting">Idle</span>' +
         '</header>' +
         '<div class="result-body">' +
@@ -84,100 +81,73 @@ function buildGrid() {
 }
 buildGrid();
 
-/* ------------------------------------------------------------------ */
-/* UI state helpers                                                     */
-/* ------------------------------------------------------------------ */
-function setRunning(running) {
-  el.runBtn.disabled = running;
-  el.runBtn.classList.toggle('running', running);
-  el.runBtnText.textContent = running ? 'Running\u2026' : 'Run';
-  el.connectionStatus.classList.remove('running', 'done', 'error');
-  if (running) {
-    el.connectionStatus.classList.add('running');
-    el.statusText.textContent = 'Streaming';
-    el.progressStrip.hidden = false;
-    el.progressFill.style.width = '0%';
-  }
-}
-
+/* ── UI helpers ── */
 function setChip(chip, label, cls) {
   chip.textContent = label;
   chip.className = 'chip ' + cls;
 }
 
-function markFrameLoading(frame, chip) {
-  frame.classList.add('loading');
-  frame.classList.remove('has-plot');
-  setChip(chip, 'Computing', 'chip-loading');
-}
-function markFramePlot(frame, img, chip, dataUrl) {
+function setPlot(frame, img, chip, dataUrl) {
   frame.classList.remove('loading');
   frame.classList.add('has-plot');
   img.src = dataUrl;
   setChip(chip, 'Ready', 'chip-done');
 }
-function markFrameError(frame, chip) {
-  frame.classList.remove('loading');
-  setChip(chip, 'Error', 'chip-error');
-}
 
-function resetAllFrames() {
+function resetUI() {
   [
     [el.rawFrame,         el.rawImg,         el.rawChip],
     [el.spectrogramFrame, el.spectrogramImg, el.spectrogramChip],
     [el.scalogramFrame,   el.scalogramImg,   el.scalogramChip],
   ].forEach(function(arr) {
-    var frame = arr[0], img = arr[1], chip = arr[2];
-    frame.classList.remove('has-plot', 'loading');
-    img.src = '';
-    setChip(chip, 'Waiting', 'chip-idle');
+    arr[0].classList.remove('has-plot', 'loading');
+    arr[1].src = '';
+    setChip(arr[2], 'Waiting', 'chip-idle');
   });
   el.gtPill.hidden = true;
+  el.progressStrip.hidden = true;
+  el.progressFill.style.width = '0%';
+  el.progressMessage.style.color = '';
+  el.progressStrip.style.background = '';
+  el.progressStrip.style.borderColor = '';
+  buildGrid();
 }
 
-function resetAllResultCards() {
-  document.querySelectorAll('.result-card').forEach(function(card) {
-    card.className = 'result-card waiting';
-    card.querySelector('.result-badge').className = 'result-badge waiting';
-    card.querySelector('.result-badge').textContent = 'Idle';
-    card.querySelector('.result-body').innerHTML =
-      '<div class="result-empty">' +
-        '<span class="result-empty-dot"></span>' +
-        '<span>Waiting for run</span>' +
-      '</div>';
-  });
-}
-
-function markCardLoading(arch, transform) {
-  var card = document.querySelector(
-    '.result-card[data-arch="' + arch + '"][data-transform="' + transform + '"]'
-  );
-  if (!card) return;
-  card.className = 'result-card is-loading';
-  var badge = card.querySelector('.result-badge');
-  badge.className = 'result-badge loading';
-  badge.textContent = 'Running';
-  card.querySelector('.result-body').innerHTML =
-    '<div class="result-empty">' +
-      '<span class="result-empty-dot"></span>' +
-      '<span>Inferring\u2026</span>' +
-    '</div>';
+function setLoading(yes) {
+  el.runBtn.disabled = yes;
+  el.runBtn.classList.toggle('running', yes);
+  el.runBtnText.textContent = yes ? 'Running\u2026' : 'Run';
+  if (yes) {
+    el.progressStrip.hidden = false;
+    el.progressFill.style.width = '0%';
+    el.progressMessage.textContent = 'Running inference\u2026';
+    // Animate progress bar indeterminately while waiting
+    el.progressFill.style.transition = 'width 8s linear';
+    el.progressFill.style.width = '85%';
+    // Mark all plot frames as loading
+    [el.rawFrame, el.spectrogramFrame, el.scalogramFrame].forEach(function(f) {
+      f.classList.add('loading');
+    });
+    setChip(el.rawChip,         'Computing', 'chip-loading');
+    setChip(el.spectrogramChip, 'Computing', 'chip-loading');
+    setChip(el.scalogramChip,   'Computing', 'chip-loading');
+  } else {
+    el.progressFill.style.transition = 'width 0.4s ease';
+    el.progressFill.style.width = '100%';
+    setTimeout(function() { el.progressMessage.textContent = 'Done \u2713'; }, 100);
+  }
 }
 
 function fillCard(result) {
   var card = document.querySelector(
     '.result-card[data-arch="' + result.model_name + '"][data-transform="' + result.transform + '"]'
   );
-  if (!card) {
-    console.warn('fillCard: no card for', result.model_name, result.transform);
-    return;
-  }
+  if (!card) return;
 
   if (result.error) {
     card.className = 'result-card error-card';
-    var badge = card.querySelector('.result-badge');
-    badge.className = 'result-badge incorrect';
-    badge.textContent = 'Error';
+    card.querySelector('.result-badge').className = 'result-badge incorrect';
+    card.querySelector('.result-badge').textContent = 'Error';
     card.querySelector('.result-body').innerHTML =
       '<div class="result-error-msg">' + escapeHtml(result.error) + '</div>';
     return;
@@ -212,26 +182,7 @@ function fillCard(result) {
   });
 }
 
-function escapeHtml(str) {
-  return String(str).replace(/[&<>"']/g, function(c) {
-    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
-  });
-}
-
-/* ------------------------------------------------------------------ */
-/* Progress bar                                                         */
-/* ------------------------------------------------------------------ */
-var TOTAL_STEPS = 3 + 8; // 3 plots + 8 model results
-var completedSteps = 0;
-
-function bumpProgress() {
-  completedSteps++;
-  el.progressFill.style.width = Math.min(100, (completedSteps / TOTAL_STEPS) * 100) + '%';
-}
-
-/* ------------------------------------------------------------------ */
-/* Main run handler                                                     */
-/* ------------------------------------------------------------------ */
+/* ── Main run ── */
 async function run() {
   var signalPath = el.signalPath.value.trim();
   if (!signalPath) {
@@ -241,206 +192,61 @@ async function run() {
     return;
   }
 
-  completedSteps = 0;
-  resetAllFrames();
-  resetAllResultCards();
-  setRunning(true);
-  el.progressMessage.textContent = 'Connecting\u2026';
-
-  markFrameLoading(el.rawFrame,         el.rawChip);
-  markFrameLoading(el.spectrogramFrame, el.spectrogramChip);
-  markFrameLoading(el.scalogramFrame,   el.scalogramChip);
+  resetUI();
+  setLoading(true);
 
   try {
-    var resp = await fetch('/predict-stream', {
-      method:  'POST',
+    var resp = await fetch('/predict-all', {
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ signal_path: signalPath }),
+      body: JSON.stringify({ signal_path: signalPath }),
     });
 
     if (!resp.ok) {
       var txt = await resp.text();
-      throw new Error('HTTP ' + resp.status + ': ' + txt.slice(0, 200));
-    }
-    if (!resp.body) {
-      throw new Error('Browser does not support ReadableStream');
+      var detail = txt;
+      try { detail = JSON.parse(txt).detail || txt; } catch(e) {}
+      throw new Error('HTTP ' + resp.status + ': ' + detail.slice(0, 200));
     }
 
-    console.log('[run] stream connected, reading SSE...');
-    await readSSE(resp.body.getReader(), handleEvent);
-    console.log('[run] stream complete');
+    var data = await resp.json();
 
-    el.connectionStatus.classList.remove('running');
-    el.connectionStatus.classList.add('done');
-    el.statusText.textContent = 'Complete';
-    el.progressMessage.textContent = 'All models finished \u2713';
-    el.progressFill.style.width = '100%';
+    /* ── Populate plots ── */
+    setPlot(el.rawFrame,         el.rawImg,         el.rawChip,         data.raw_plot);
+    setPlot(el.spectrogramFrame, el.spectrogramImg, el.spectrogramChip, data.spectrogram_plot);
+    setPlot(el.scalogramFrame,   el.scalogramImg,   el.scalogramChip,   data.scalogram_plot);
+
+    /* ── Plot timing ── */
+    el.progressMessage.textContent = 'Plots rendered in ' + data.plot_time_ms.toFixed(1) + ' ms — running inference…';
+
+    /* ── Ground truth ── */
+    el.gtValue.textContent = fmtLabel(data.ground_truth);
+    el.gtPill.hidden = false;
+
+    /* ── Fill all 8 result cards ── */
+    data.results.forEach(function(r) { fillCard(r); });
+
+    el.progressMessage.textContent = 'Plots: ' + data.plot_time_ms.toFixed(1) + ' ms — all models done ✓';
+    setLoading(false);
 
   } catch (err) {
-    console.error('[run] Fatal error:', err);
-    el.connectionStatus.classList.remove('running');
-    el.connectionStatus.classList.add('error');
-    el.statusText.textContent = 'Error';
+    console.error('[run] error:', err);
+    setLoading(false);
+    el.progressFill.style.width = '100%';
+    el.progressFill.style.background = 'var(--danger)';
     el.progressMessage.textContent = 'Error: ' + err.message;
-    markFrameError(el.rawFrame,         el.rawChip);
-    markFrameError(el.spectrogramFrame, el.spectrogramChip);
-    markFrameError(el.scalogramFrame,   el.scalogramChip);
-
-  } finally {
-    el.runBtn.disabled = false;
-    el.runBtn.classList.remove('running');
-    el.runBtnText.textContent = 'Run';
+    el.progressMessage.style.color = 'var(--danger)';
+    el.progressStrip.style.background = 'rgba(255,59,48,0.06)';
+    el.progressStrip.style.borderColor = 'rgba(255,59,48,0.2)';
+    [el.rawFrame, el.spectrogramFrame, el.scalogramFrame].forEach(function(f) {
+      f.classList.remove('loading');
+    });
+    setChip(el.rawChip,         'Error', 'chip-error');
+    setChip(el.spectrogramChip, 'Error', 'chip-error');
+    setChip(el.scalogramChip,   'Error', 'chip-error');
   }
 }
 
-/* ------------------------------------------------------------------ */
-/* SSE parser                                                           */
-/*                                                                      */
-/* Named-event wire format the backend sends:                          */
-/*   event: raw\n                                                       */
-/*   data: {"plot":"data:image/png;base64,..."}\n                      */
-/*   \n                                                                 */
-/*                                                                      */
-/* We buffer raw bytes, split on blank lines, parse each block.        */
-/* ------------------------------------------------------------------ */
-async function readSSE(reader, onEvent) {
-  var decoder = new TextDecoder('utf-8');
-  var buffer  = '';
-
-  while (true) {
-    var chunk = await reader.read();
-    if (chunk.done) break;
-
-    buffer += decoder.decode(chunk.value, { stream: true });
-
-    // Process every complete message (terminated by \n\n)
-    var boundary;
-    while ((boundary = buffer.indexOf('\n\n')) !== -1) {
-      var block = buffer.slice(0, boundary);
-      buffer    = buffer.slice(boundary + 2);
-      if (block.trim()) parseSSEBlock(block, onEvent);
-    }
-  }
-
-  // Flush any trailing data
-  if (buffer.trim()) parseSSEBlock(buffer, onEvent);
-}
-
-function parseSSEBlock(block, onEvent) {
-  // Normalise line endings
-  var lines     = block.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
-  var eventName = null;
-  var dataStr   = null;
-
-  for (var i = 0; i < lines.length; i++) {
-    var line = lines[i];
-    if (line.startsWith('event:')) {
-      eventName = line.slice(6).trim();
-    } else if (line.startsWith('data:')) {
-      var piece = line.slice(5).trimStart();
-      dataStr   = (dataStr === null) ? piece : dataStr + piece;
-    }
-  }
-
-  if (!dataStr) {
-    console.warn('[SSE] Block has no data line:', block.slice(0, 80));
-    return;
-  }
-
-  var data;
-  try {
-    data = JSON.parse(dataStr);
-  } catch (e) {
-    console.error('[SSE] JSON.parse failed:', e.message);
-    console.error('[SSE] data preview (first 300 chars):', dataStr.slice(0, 300));
-    return;
-  }
-
-  // Named-event format (backend sends event: + data:)
-  if (eventName) {
-    console.debug('[SSE] event=' + eventName, Object.keys(data));
-    onEvent({ event: eventName, data: data });
-    return;
-  }
-
-  // Fallback: embedded format { "event": "...", "data": {...} }
-  if (data.event && data.data !== undefined) {
-    console.debug('[SSE] embedded event=' + data.event);
-    onEvent(data);
-    return;
-  }
-
-  console.warn('[SSE] Cannot determine event name from block:', block.slice(0, 100));
-}
-
-/* ------------------------------------------------------------------ */
-/* Event router                                                         */
-/* ------------------------------------------------------------------ */
-function handleEvent(ev) {
-  switch (ev.event) {
-
-    case 'status':
-      el.progressMessage.textContent = ev.data.message || '';
-      break;
-
-    case 'raw':
-      markFramePlot(el.rawFrame, el.rawImg, el.rawChip, ev.data.plot);
-      bumpProgress();
-      break;
-
-    case 'spectrogram':
-      markFramePlot(el.spectrogramFrame, el.spectrogramImg, el.spectrogramChip, ev.data.plot);
-      bumpProgress();
-      break;
-
-    case 'scalogram':
-      markFramePlot(el.scalogramFrame, el.scalogramImg, el.scalogramChip, ev.data.plot);
-      bumpProgress();
-      break;
-
-    case 'meta':
-      el.gtValue.textContent = fmtLabel(ev.data.ground_truth);
-      el.gtPill.hidden = false;
-      ARCHITECTURES.forEach(function(arch) {
-        TRANSFORMS.forEach(function(t) { markCardLoading(arch, t); });
-      });
-      break;
-
-    case 'result':
-      fillCard(ev.data);
-      bumpProgress();
-      break;
-
-    case 'done':
-      break;
-
-    case 'error':
-      console.error('[backend error]', ev.data.message);
-      if (ev.data.traceback) console.error('[traceback]', ev.data.traceback);
-      el.progressMessage.textContent = 'Error: ' + ev.data.message;
-      el.progressStrip.style.background = 'rgba(255,59,48,0.08)';
-      el.progressStrip.style.borderColor = 'rgba(255,59,48,0.25)';
-      el.progressMessage.style.color = 'var(--danger)';
-      el.connectionStatus.classList.remove('running');
-      el.connectionStatus.classList.add('error');
-      el.statusText.textContent = 'Error';
-      // Only mark frames that haven't loaded yet as errors
-      if (!el.rawFrame.classList.contains('has-plot'))
-        markFrameError(el.rawFrame, el.rawChip);
-      if (!el.spectrogramFrame.classList.contains('has-plot'))
-        markFrameError(el.spectrogramFrame, el.spectrogramChip);
-      if (!el.scalogramFrame.classList.contains('has-plot'))
-        markFrameError(el.scalogramFrame, el.scalogramChip);
-      break;
-
-    default:
-      console.warn('[SSE] Unknown event:', ev.event);
-  }
-}
-
-/* ------------------------------------------------------------------ */
-/* Event wiring                                                         */
-/* ------------------------------------------------------------------ */
 el.runBtn.addEventListener('click', run);
 el.signalPath.addEventListener('keydown', function(e) {
   if (e.key === 'Enter') run();
