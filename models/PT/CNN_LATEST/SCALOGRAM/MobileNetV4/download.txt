@@ -1,145 +1,0 @@
-6.7s 1 0.00s - Debugger warning: It seems that frozen modules are being used, which may
-6.7s 2 0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
-6.7s 3 0.00s - to python to disable frozen modules.
-6.7s 4 0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
-7.3s 5 0.00s - Debugger warning: It seems that frozen modules are being used, which may
-7.3s 6 0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
-7.3s 7 0.00s - to python to disable frozen modules.
-7.3s 8 0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
-8.4s 9 Cloning into 'cnn_trainer_graduation_thesis'...
-9.1s 10 remote: Enumerating objects: 24, done.[K
-9.1s 11 remote: Counting objects:   4% (1/24)[Kremote: Counting objects:   8% (2/24)[Kremote: Counting objects:  12% (3/24)[Kremote: Counting objects:  16% (4/24)[Kremote: Counting objects:  20% (5/24)[Kremote: Counting objects:  25% (6/24)[Kremote: Counting objects:  29% (7/24)[Kremote: Counting objects:  33% (8/24)[Kremote: Counting objects:  37% (9/24)[Kremote: Counting objects:  41% (10/24)[Kremote: Counting objects:  45% (11/24)[Kremote: Counting objects:  50% (12/24)[Kremote: Counting objects:  54% (13/24)[Kremote: Counting objects:  58% (14/24)[Kremote: Counting objects:  62% (15/24)[Kremote: Counting objects:  66% (16/24)[Kremote: Counting objects:  70% (17/24)[Kremote: Counting objects:  75% (18/24)[Kremote: Counting objects:  79% (19/24)[Kremote: Counting objects:  83% (20/24)[Kremote: Counting objects:  87% (21/24)[Kremote: Counting objects:  91% (22/24)[Kremote: Counting objects:  95% (23/24)[Kremote: Counting objects: 100% (24/24)[Kremote: Counting objects: 100% (24/24), done.[K
-9.1s 12 remote: Compressing objects:   6% (1/16)[Kremote: Compressing objects:  12% (2/16)[Kremote: Compressing objects:  18% (3/16)[Kremote: Compressing objects:  25% (4/16)[Kremote: Compressing objects:  31% (5/16)[Kremote: Compressing objects:  37% (6/16)[Kremote: Compressing objects:  43% (7/16)[Kremote: Compressing objects:  50% (8/16)[Kremote: Compressing objects:  56% (9/16)[Kremote: Compressing objects:  62% (10/16)[Kremote: Compressing objects:  68% (11/16)[Kremote: Compressing objects:  75% (12/16)[Kremote: Compressing objects:  81% (13/16)[Kremote: Compressing objects:  87% (14/16)[Kremote: Compressing objects:  93% (15/16)[Kremote: Compressing objects: 100% (16/16)[Kremote: Compressing objects: 100% (16/16), done.[K
-9.1s 13 remote: Total 24 (delta 11), reused 21 (delta 8), pack-reused 0 (from 0)[K
-9.1s 14 Receiving objects:   4% (1/24)Receiving objects:   8% (2/24)Receiving objects:  12% (3/24)Receiving objects:  16% (4/24)Receiving objects:  20% (5/24)Receiving objects:  25% (6/24)Receiving objects:  29% (7/24)Receiving objects:  33% (8/24)Receiving objects:  37% (9/24)Receiving objects:  41% (10/24)Receiving objects:  45% (11/24)Receiving objects:  50% (12/24)Receiving objects:  54% (13/24)Receiving objects:  58% (14/24)Receiving objects:  62% (15/24)Receiving objects:  66% (16/24)Receiving objects:  70% (17/24)Receiving objects:  75% (18/24)Receiving objects:  79% (19/24)Receiving objects:  83% (20/24)Receiving objects:  87% (21/24)Receiving objects:  91% (22/24)Receiving objects:  95% (23/24)Receiving objects: 100% (24/24)Receiving objects: 100% (24/24), 13.94 KiB | 4.65 MiB/s, done.
-9.1s 15 Resolving deltas:   0% (0/11)Resolving deltas:   9% (1/11)Resolving deltas:  18% (2/11)Resolving deltas:  27% (3/11)Resolving deltas:  36% (4/11)Resolving deltas:  45% (5/11)Resolving deltas:  54% (6/11)Resolving deltas:  63% (7/11)Resolving deltas:  72% (8/11)Resolving deltas:  81% (9/11)Resolving deltas:  90% (10/11)Resolving deltas: 100% (11/11)Resolving deltas: 100% (11/11), done.
-36.1s 16 ======================================================================
-36.1s 17 Training on cuda | AMP: True
-36.1s 18 Classes: ['Normal', 'Outer Race', 'Inner Race', 'Ball']
-36.1s 19 Patience: 10
-36.1s 20 ======================================================================
-36.1s 21 
-49.4s 22 Epoch 001/150 │ Loss: 6.1863 / 7.1993 │ Acc: 0.4380 │ F1: 0.1523 │ κ: 0.0000 │ MCC: 0.0000 │ LR: 3.00e-05 │ 13.3s ★
-52.5s 23 Epoch 002/150 │ Loss: 3.9754 / 5.0334 │ Acc: 0.4353 │ F1: 0.2169 │ κ: 0.0470 │ MCC: 0.0647 │ LR: 3.00e-05 │ 3.0s ★
-55.4s 24 Epoch 003/150 │ Loss: 3.3165 / 1.8190 │ Acc: 0.5876 │ F1: 0.6071 │ κ: 0.3856 │ MCC: 0.3885 │ LR: 3.00e-05 │ 2.9s ★
-58.3s 25 Epoch 004/150 │ Loss: 3.0224 / 1.6649 │ Acc: 0.6360 │ F1: 0.6545 │ κ: 0.4457 │ MCC: 0.4542 │ LR: 2.99e-05 │ 2.9s ★
-61.4s 26 Epoch 005/150 │ Loss: 2.8081 / 1.5428 │ Acc: 0.6741 │ F1: 0.6936 │ κ: 0.5094 │ MCC: 0.5148 │ LR: 2.99e-05 │ 3.0s ★
-64.7s 27 Epoch 006/150 │ Loss: 2.6009 / 1.4850 │ Acc: 0.6877 │ F1: 0.7055 │ κ: 0.5308 │ MCC: 0.5346 │ LR: 2.99e-05 │ 3.3s ★
-67.7s 28 Epoch 007/150 │ Loss: 2.4829 / 1.3515 │ Acc: 0.7188 │ F1: 0.7433 │ κ: 0.5846 │ MCC: 0.5851 │ LR: 2.98e-05 │ 3.0s ★
-70.8s 29 Epoch 008/150 │ Loss: 2.3047 / 1.2959 │ Acc: 0.7428 │ F1: 0.7627 │ κ: 0.6157 │ MCC: 0.6179 │ LR: 2.98e-05 │ 3.1s ★
-73.8s 30 Epoch 009/150 │ Loss: 2.2283 / 1.3275 │ Acc: 0.7559 │ F1: 0.7857 │ κ: 0.6427 │ MCC: 0.6458 │ LR: 2.97e-05 │ 3.0s
-76.9s 31 Epoch 010/150 │ Loss: 2.0516 / 1.2291 │ Acc: 0.7939 │ F1: 0.8140 │ κ: 0.6979 │ MCC: 0.6982 │ LR: 2.97e-05 │ 3.0s ★
-79.8s 32 Epoch 011/150 │ Loss: 2.0230 / 1.2674 │ Acc: 0.7867 │ F1: 0.8084 │ κ: 0.6833 │ MCC: 0.6866 │ LR: 2.96e-05 │ 3.0s
-82.9s 33 Epoch 012/150 │ Loss: 1.9123 / 1.1795 │ Acc: 0.8150 │ F1: 0.8277 │ κ: 0.7276 │ MCC: 0.7281 │ LR: 2.95e-05 │ 3.1s ★
-85.9s 34 Epoch 013/150 │ Loss: 1.8454 / 1.1505 │ Acc: 0.8139 │ F1: 0.8333 │ κ: 0.7208 │ MCC: 0.7257 │ LR: 2.94e-05 │ 3.0s ★
-89.0s 35 Epoch 014/150 │ Loss: 1.7741 / 1.0683 │ Acc: 0.8312 │ F1: 0.8423 │ κ: 0.7488 │ MCC: 0.7508 │ LR: 2.94e-05 │ 3.0s ★
-92.1s 36 Epoch 015/150 │ Loss: 1.6668 / 1.0388 │ Acc: 0.8445 │ F1: 0.8523 │ κ: 0.7701 │ MCC: 0.7705 │ LR: 2.93e-05 │ 3.1s ★
-95.1s 37 Epoch 016/150 │ Loss: 1.6430 / 1.0406 │ Acc: 0.8435 │ F1: 0.8547 │ κ: 0.7660 │ MCC: 0.7693 │ LR: 2.92e-05 │ 3.0s
-98.2s 38 Epoch 017/150 │ Loss: 1.5659 / 1.0405 │ Acc: 0.8536 │ F1: 0.8609 │ κ: 0.7821 │ MCC: 0.7846 │ LR: 2.91e-05 │ 3.0s
-101.2s 39 Epoch 018/150 │ Loss: 1.5232 / 1.0017 │ Acc: 0.8695 │ F1: 0.8801 │ κ: 0.8066 │ MCC: 0.8076 │ LR: 2.89e-05 │ 3.0s ★
-104.3s 40 Epoch 019/150 │ Loss: 1.4480 / 0.9213 │ Acc: 0.8783 │ F1: 0.8842 │ κ: 0.8202 │ MCC: 0.8210 │ LR: 2.88e-05 │ 3.0s ★
-107.3s 41 Epoch 020/150 │ Loss: 1.4040 / 0.9857 │ Acc: 0.8533 │ F1: 0.8631 │ κ: 0.7803 │ MCC: 0.7856 │ LR: 2.87e-05 │ 3.0s
-110.4s 42 Epoch 021/150 │ Loss: 1.3681 / 0.9174 │ Acc: 0.8746 │ F1: 0.8828 │ κ: 0.8134 │ MCC: 0.8156 │ LR: 2.86e-05 │ 3.0s ★
-113.5s 43 Epoch 022/150 │ Loss: 1.3209 / 0.8866 │ Acc: 0.8727 │ F1: 0.8775 │ κ: 0.8100 │ MCC: 0.8131 │ LR: 2.84e-05 │ 3.1s ★
-116.5s 44 Epoch 023/150 │ Loss: 1.2523 / 0.8264 │ Acc: 0.8871 │ F1: 0.8948 │ κ: 0.8319 │ MCC: 0.8347 │ LR: 2.83e-05 │ 3.0s ★
-119.6s 45 Epoch 024/150 │ Loss: 1.2262 / 0.8395 │ Acc: 0.8743 │ F1: 0.8806 │ κ: 0.8121 │ MCC: 0.8167 │ LR: 2.81e-05 │ 3.0s
-122.6s 46 Epoch 025/150 │ Loss: 1.1697 / 0.7828 │ Acc: 0.8964 │ F1: 0.9052 │ κ: 0.8458 │ MCC: 0.8484 │ LR: 2.80e-05 │ 3.1s ★
-125.9s 47 Epoch 026/150 │ Loss: 1.1338 / 0.7363 │ Acc: 0.9089 │ F1: 0.9134 │ κ: 0.8655 │ MCC: 0.8660 │ LR: 2.78e-05 │ 3.3s ★
-129.0s 48 Epoch 027/150 │ Loss: 1.0931 / 0.7084 │ Acc: 0.9076 │ F1: 0.9115 │ κ: 0.8630 │ MCC: 0.8644 │ LR: 2.77e-05 │ 3.0s ★
-132.1s 49 Epoch 028/150 │ Loss: 1.0487 / 0.6694 │ Acc: 0.9175 │ F1: 0.9221 │ κ: 0.8786 │ MCC: 0.8788 │ LR: 2.75e-05 │ 3.1s ★
-135.1s 50 Epoch 029/150 │ Loss: 1.0119 / 0.6512 │ Acc: 0.9121 │ F1: 0.9180 │ κ: 0.8702 │ MCC: 0.8704 │ LR: 2.73e-05 │ 3.0s ★
-138.1s 51 Epoch 030/150 │ Loss: 0.9551 / 0.6279 │ Acc: 0.9204 │ F1: 0.9261 │ κ: 0.8826 │ MCC: 0.8829 │ LR: 2.71e-05 │ 3.0s ★
-141.2s 52 Epoch 031/150 │ Loss: 0.9427 / 0.6174 │ Acc: 0.9148 │ F1: 0.9250 │ κ: 0.8738 │ MCC: 0.8750 │ LR: 2.69e-05 │ 3.0s ★
-144.2s 53 Epoch 032/150 │ Loss: 0.9018 / 0.5930 │ Acc: 0.9191 │ F1: 0.9218 │ κ: 0.8803 │ MCC: 0.8806 │ LR: 2.68e-05 │ 3.0s ★
-147.2s 54 Epoch 033/150 │ Loss: 0.8849 / 0.5917 │ Acc: 0.9241 │ F1: 0.9301 │ κ: 0.8880 │ MCC: 0.8887 │ LR: 2.66e-05 │ 3.0s ★
-150.1s 55 Epoch 034/150 │ Loss: 0.8365 / 0.5873 │ Acc: 0.9164 │ F1: 0.9217 │ κ: 0.8760 │ MCC: 0.8775 │ LR: 2.64e-05 │ 2.9s ★
-153.1s 56 Epoch 035/150 │ Loss: 0.8292 / 0.5707 │ Acc: 0.9201 │ F1: 0.9256 │ κ: 0.8815 │ MCC: 0.8828 │ LR: 2.61e-05 │ 3.0s ★
-156.1s 57 Epoch 036/150 │ Loss: 0.7881 / 0.5557 │ Acc: 0.9268 │ F1: 0.9305 │ κ: 0.8918 │ MCC: 0.8923 │ LR: 2.59e-05 │ 2.9s ★
-159.0s 58 Epoch 037/150 │ Loss: 0.7673 / 0.5509 │ Acc: 0.9308 │ F1: 0.9315 │ κ: 0.8984 │ MCC: 0.8987 │ LR: 2.57e-05 │ 2.9s ★
-161.9s 59 Epoch 038/150 │ Loss: 0.7715 / 0.5360 │ Acc: 0.9289 │ F1: 0.9317 │ κ: 0.8948 │ MCC: 0.8956 │ LR: 2.55e-05 │ 2.9s ★
-164.8s 60 Epoch 039/150 │ Loss: 0.7149 / 0.5308 │ Acc: 0.9286 │ F1: 0.9314 │ κ: 0.8942 │ MCC: 0.8957 │ LR: 2.53e-05 │ 2.9s ★
-167.8s 61 Epoch 040/150 │ Loss: 0.6956 / 0.5208 │ Acc: 0.9308 │ F1: 0.9368 │ κ: 0.8975 │ MCC: 0.8987 │ LR: 2.50e-05 │ 2.9s ★
-170.8s 62 Epoch 041/150 │ Loss: 0.6857 / 0.5123 │ Acc: 0.9412 │ F1: 0.9441 │ κ: 0.9135 │ MCC: 0.9138 │ LR: 2.48e-05 │ 2.9s ★
-173.8s 63 Epoch 042/150 │ Loss: 0.6542 / 0.5136 │ Acc: 0.9316 │ F1: 0.9351 │ κ: 0.8988 │ MCC: 0.9000 │ LR: 2.46e-05 │ 3.0s
-176.8s 64 Epoch 043/150 │ Loss: 0.6593 / 0.5083 │ Acc: 0.9326 │ F1: 0.9358 │ κ: 0.9003 │ MCC: 0.9015 │ LR: 2.43e-05 │ 3.0s ★
-179.8s 65 Epoch 044/150 │ Loss: 0.6422 / 0.5065 │ Acc: 0.9390 │ F1: 0.9422 │ κ: 0.9100 │ MCC: 0.9108 │ LR: 2.41e-05 │ 3.0s ★
-182.9s 66 Epoch 045/150 │ Loss: 0.6545 / 0.4874 │ Acc: 0.9476 │ F1: 0.9507 │ κ: 0.9228 │ MCC: 0.9230 │ LR: 2.38e-05 │ 3.1s ★
-186.2s 67 Epoch 046/150 │ Loss: 0.6354 / 0.4883 │ Acc: 0.9452 │ F1: 0.9475 │ κ: 0.9191 │ MCC: 0.9196 │ LR: 2.36e-05 │ 3.1s
-189.4s 68 Epoch 047/150 │ Loss: 0.6390 / 0.4800 │ Acc: 0.9489 │ F1: 0.9514 │ κ: 0.9246 │ MCC: 0.9251 │ LR: 2.33e-05 │ 3.3s ★
-192.5s 69 Epoch 048/150 │ Loss: 0.6162 / 0.4732 │ Acc: 0.9481 │ F1: 0.9502 │ κ: 0.9234 │ MCC: 0.9238 │ LR: 2.30e-05 │ 3.1s ★
-195.6s 70 Epoch 049/150 │ Loss: 0.5911 / 0.4761 │ Acc: 0.9476 │ F1: 0.9493 │ κ: 0.9225 │ MCC: 0.9231 │ LR: 2.28e-05 │ 3.1s
-198.7s 71 Epoch 050/150 │ Loss: 0.5980 / 0.4755 │ Acc: 0.9483 │ F1: 0.9509 │ κ: 0.9237 │ MCC: 0.9244 │ LR: 2.25e-05 │ 3.1s
-201.9s 72 Epoch 051/150 │ Loss: 0.6013 / 0.4897 │ Acc: 0.9361 │ F1: 0.9416 │ κ: 0.9052 │ MCC: 0.9073 │ LR: 2.22e-05 │ 3.1s
-205.0s 73 Epoch 052/150 │ Loss: 0.5792 / 0.4771 │ Acc: 0.9452 │ F1: 0.9497 │ κ: 0.9189 │ MCC: 0.9200 │ LR: 2.19e-05 │ 3.1s
-208.1s 74 Epoch 053/150 │ Loss: 0.5704 / 0.4756 │ Acc: 0.9476 │ F1: 0.9514 │ κ: 0.9225 │ MCC: 0.9234 │ LR: 2.17e-05 │ 3.1s
-211.3s 75 Epoch 054/150 │ Loss: 0.5586 / 0.4961 │ Acc: 0.9294 │ F1: 0.9361 │ κ: 0.8951 │ MCC: 0.8980 │ LR: 2.14e-05 │ 3.1s
-214.4s 76 Epoch 055/150 │ Loss: 0.5569 / 0.4540 │ Acc: 0.9582 │ F1: 0.9610 │ κ: 0.9384 │ MCC: 0.9387 │ LR: 2.11e-05 │ 3.1s ★
-217.6s 77 Epoch 056/150 │ Loss: 0.5445 / 0.4639 │ Acc: 0.9489 │ F1: 0.9532 │ κ: 0.9244 │ MCC: 0.9254 │ LR: 2.08e-05 │ 3.1s
-220.7s 78 Epoch 057/150 │ Loss: 0.5556 / 0.4599 │ Acc: 0.9521 │ F1: 0.9561 │ κ: 0.9293 │ MCC: 0.9299 │ LR: 2.05e-05 │ 3.1s
-223.8s 79 Epoch 058/150 │ Loss: 0.5538 / 0.4613 │ Acc: 0.9553 │ F1: 0.9581 │ κ: 0.9340 │ MCC: 0.9345 │ LR: 2.02e-05 │ 3.1s
-226.9s 80 Epoch 059/150 │ Loss: 0.5687 / 0.4692 │ Acc: 0.9409 │ F1: 0.9485 │ κ: 0.9123 │ MCC: 0.9141 │ LR: 1.99e-05 │ 3.1s
-230.0s 81 Epoch 060/150 │ Loss: 0.5487 / 0.4640 │ Acc: 0.9433 │ F1: 0.9495 │ κ: 0.9161 │ MCC: 0.9173 │ LR: 1.96e-05 │ 3.1s
-233.0s 82 Epoch 061/150 │ Loss: 0.5344 / 0.4509 │ Acc: 0.9566 │ F1: 0.9611 │ κ: 0.9360 │ MCC: 0.9365 │ LR: 1.93e-05 │ 3.1s ★
-236.1s 83 Epoch 062/150 │ Loss: 0.5192 / 0.4423 │ Acc: 0.9651 │ F1: 0.9688 │ κ: 0.9487 │ MCC: 0.9488 │ LR: 1.90e-05 │ 3.1s ★
-239.2s 84 Epoch 063/150 │ Loss: 0.5373 / 0.4502 │ Acc: 0.9574 │ F1: 0.9629 │ κ: 0.9372 │ MCC: 0.9376 │ LR: 1.87e-05 │ 3.0s
-242.3s 85 Epoch 064/150 │ Loss: 0.5366 / 0.4600 │ Acc: 0.9489 │ F1: 0.9555 │ κ: 0.9244 │ MCC: 0.9254 │ LR: 1.84e-05 │ 3.1s
-245.3s 86 Epoch 065/150 │ Loss: 0.5475 / 0.4557 │ Acc: 0.9491 │ F1: 0.9555 │ κ: 0.9247 │ MCC: 0.9260 │ LR: 1.81e-05 │ 3.0s
-248.2s 87 Epoch 066/150 │ Loss: 0.6695 / 0.4699 │ Acc: 0.9574 │ F1: 0.9617 │ κ: 0.9370 │ MCC: 0.9377 │ LR: 1.78e-05 │ 2.9s
-251.2s 88 Epoch 067/150 │ Loss: 0.5538 / 0.4444 │ Acc: 0.9590 │ F1: 0.9642 │ κ: 0.9394 │ MCC: 0.9401 │ LR: 1.75e-05 │ 2.9s
-254.3s 89 Epoch 068/150 │ Loss: 0.5609 / 0.4524 │ Acc: 0.9465 │ F1: 0.9537 │ κ: 0.9207 │ MCC: 0.9222 │ LR: 1.72e-05 │ 3.2s
-257.2s 90 Epoch 069/150 │ Loss: 0.5159 / 0.4527 │ Acc: 0.9497 │ F1: 0.9569 │ κ: 0.9255 │ MCC: 0.9268 │ LR: 1.69e-05 │ 2.9s
-260.2s 91 Epoch 070/150 │ Loss: 0.5263 / 0.4360 │ Acc: 0.9641 │ F1: 0.9679 │ κ: 0.9470 │ MCC: 0.9474 │ LR: 1.66e-05 │ 3.0s ★
-263.2s 92 Epoch 071/150 │ Loss: 0.5554 / 0.4531 │ Acc: 0.9518 │ F1: 0.9587 │ κ: 0.9287 │ MCC: 0.9299 │ LR: 1.63e-05 │ 3.0s
-266.2s 93 Epoch 072/150 │ Loss: 0.5155 / 0.4422 │ Acc: 0.9585 │ F1: 0.9637 │ κ: 0.9386 │ MCC: 0.9393 │ LR: 1.59e-05 │ 3.0s
-269.2s 94 Epoch 073/150 │ Loss: 0.5701 / 0.4529 │ Acc: 0.9526 │ F1: 0.9592 │ κ: 0.9298 │ MCC: 0.9311 │ LR: 1.56e-05 │ 3.0s
-272.2s 95 Epoch 074/150 │ Loss: 0.5572 / 0.4451 │ Acc: 0.9606 │ F1: 0.9659 │ κ: 0.9417 │ MCC: 0.9425 │ LR: 1.53e-05 │ 3.0s
-275.2s 96 Epoch 075/150 │ Loss: 0.5675 / 0.4447 │ Acc: 0.9606 │ F1: 0.9655 │ κ: 0.9418 │ MCC: 0.9424 │ LR: 1.50e-05 │ 3.0s
-278.3s 97 Epoch 076/150 │ Loss: 0.5288 / 0.4399 │ Acc: 0.9587 │ F1: 0.9639 │ κ: 0.9390 │ MCC: 0.9398 │ LR: 1.47e-05 │ 3.1s
-281.5s 98 Epoch 077/150 │ Loss: 0.5437 / 0.4502 │ Acc: 0.9481 │ F1: 0.9554 │ κ: 0.9230 │ MCC: 0.9246 │ LR: 1.44e-05 │ 3.2s
-284.6s 99 Epoch 078/150 │ Loss: 0.5619 / 0.4425 │ Acc: 0.9550 │ F1: 0.9613 │ κ: 0.9334 │ MCC: 0.9344 │ LR: 1.41e-05 │ 3.1s
-287.7s 100 Epoch 079/150 │ Loss: 0.6128 / 0.4533 │ Acc: 0.9555 │ F1: 0.9616 │ κ: 0.9341 │ MCC: 0.9354 │ LR: 1.37e-05 │ 3.0s
-290.5s 101 Epoch 080/150 │ Loss: 0.5436 / 0.4401 │ Acc: 0.9537 │ F1: 0.9601 │ κ: 0.9314 │ MCC: 0.9326 │ LR: 1.34e-05 │ 3.1s
-290.5s 102 
-290.5s 103 ✗ Early stopping at epoch 80.
-290.5s 104 Best epoch: 70 (val_loss=0.4360)
-290.5s 105 
-290.5s 106 ✓ Restored best model from epoch 70.
-290.8s 107 
-290.8s 108 ──────────────────────────────────────────────────
-290.8s 109 Training Summary — Best Epoch: 70
-290.8s 110 ──────────────────────────────────────────────────
-290.8s 111 Accuracy       : 0.9537
-290.8s 112 Precision (M)  : 0.9648
-290.8s 113 Recall    (M)  : 0.9583
-290.8s 114 F1-Score  (M)  : 0.9601
-290.8s 115 AUC-ROC   (M)  : 0.9984
-290.8s 116 Cohen's κ      : 0.9314
-290.8s 117 MCC            : 0.9326
-290.8s 118 ──────────────────────────────────────────────────
-290.8s 119 
-290.8s 120 precision    recall  f1-score   support
-290.8s 121 
-290.8s 122 Normal     0.9750    1.0000    0.9873       234
-290.8s 123 Outer Race     0.9256    0.9757    0.9500      1645
-290.8s 124 Inner Race     0.9939    0.8628    0.9237       940
-290.8s 125 Ball     0.9648    0.9947    0.9795       937
-290.8s 126 
-290.8s 127 accuracy                         0.9537      3756
-290.8s 128 macro avg     0.9648    0.9583    0.9601      3756
-290.8s 129 weighted avg     0.9555    0.9537    0.9531      3756
-290.8s 130 
-293.5s 131 ✓ Model saved to scalogram_mobilenetv4.pth
-299.1s 132 /usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\|'
-299.1s 133 cells[i][c] = re.sub('\\\\\|', '|', cell)
-299.3s 134 /usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
-299.3s 135 text = re.sub(r'_', '\_', text) # Escape underscores in display text
-299.9s 136 [NbConvertApp] Converting notebook __notebook__.ipynb to notebook
-300.2s 137 [NbConvertApp] Writing 296513 bytes to __notebook__.ipynb
-302.7s 138 [NbConvertApp] Converting notebook __notebook__.ipynb to html
-303.6s 139 [NbConvertApp] Support files will be in __results___files/
-303.6s 140 [NbConvertApp] Making directory __results___files
-303.6s 141 [NbConvertApp] Making directory __results___files
-303.6s 142 [NbConvertApp] Making directory __results___files
-303.6s 143 [NbConvertApp] Making directory __results___files
-303.6s 144 [NbConvertApp] Making directory __results___files
-303.6s 145 [NbConvertApp] Writing 297852 bytes to __results__.html

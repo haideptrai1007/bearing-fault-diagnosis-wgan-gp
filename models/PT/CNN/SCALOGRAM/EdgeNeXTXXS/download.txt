@@ -1,290 +1,80 @@
-10.8s 1 0.00s - Debugger warning: It seems that frozen modules are being used, which may
-10.8s 2 0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
-10.8s 3 0.00s - to python to disable frozen modules.
-10.8s 4 0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
-11.6s 5 0.00s - Debugger warning: It seems that frozen modules are being used, which may
-11.6s 6 0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
-11.6s 7 0.00s - to python to disable frozen modules.
-11.6s 8 0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
-13.0s 9 Cloning into 'cnn_trainer_graduation_thesis'...
-13.8s 10 remote: Enumerating objects: 14, done.[K
-13.8s 11 remote: Counting objects:   7% (1/14)[Kremote: Counting objects:  14% (2/14)[Kremote: Counting objects:  21% (3/14)[Kremote: Counting objects:  28% (4/14)[Kremote: Counting objects:  35% (5/14)[Kremote: Counting objects:  42% (6/14)[Kremote: Counting objects:  50% (7/14)[Kremote: Counting objects:  57% (8/14)[Kremote: Counting objects:  64% (9/14)[Kremote: Counting objects:  71% (10/14)[Kremote: Counting objects:  78% (11/14)[Kremote: Counting objects:  85% (12/14)[Kremote: Counting objects:  92% (13/14)[Kremote: Counting objects: 100% (14/14)[Kremote: Counting objects: 100% (14/14), done.[K
-13.8s 12 remote: Compressing objects:  10% (1/10)[Kremote: Compressing objects:  20% (2/10)[Kremote: Compressing objects:  30% (3/10)[Kremote: Compressing objects:  40% (4/10)[Kremote: Compressing objects:  50% (5/10)[Kremote: Compressing objects:  60% (6/10)[Kremote: Compressing objects:  70% (7/10)[Kremote: Compressing objects:  80% (8/10)[Kremote: Compressing objects:  90% (9/10)[Kremote: Compressing objects: 100% (10/10)[Kremote: Compressing objects: 100% (10/10), done.[K
-13.8s 13 remote: Total 14 (delta 4), reused 14 (delta 4), pack-reused 0 (from 0)[K
-13.8s 14 Receiving objects:   7% (1/14)Receiving objects:  14% (2/14)Receiving objects:  21% (3/14)Receiving objects:  28% (4/14)Receiving objects:  35% (5/14)Receiving objects:  42% (6/14)Receiving objects:  50% (7/14)Receiving objects:  57% (8/14)Receiving objects:  64% (9/14)Receiving objects:  71% (10/14)Receiving objects:  78% (11/14)Receiving objects:  85% (12/14)Receiving objects:  92% (13/14)Receiving objects: 100% (14/14)Receiving objects: 100% (14/14), 11.76 KiB | 1.96 MiB/s, done.
-13.8s 15 Resolving deltas:   0% (0/4)Resolving deltas:  25% (1/4)Resolving deltas:  50% (2/4)Resolving deltas:  75% (3/4)Resolving deltas: 100% (4/4)Resolving deltas: 100% (4/4), done.
-51.7s 16 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:89: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
-51.7s 17 self.scaler = GradScaler(enabled=self.use_amp)
-51.7s 18 
-51.7s 19 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:89: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
-51.7s 20 self.scaler = GradScaler(enabled=self.use_amp)
-51.9s 21 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-51.9s 22 with autocast(enabled=self.use_amp):
-51.9s 23 
-51.9s 24 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-51.9s 25 with autocast(enabled=self.use_amp):
-51.9s 26 ======================================================================
-51.9s 27 Training on cuda | AMP: True
-51.9s 28 Classes: ['Normal', 'Outer Race', 'Inner Race', 'Ball']
-51.9s 29 Patience: 10
-51.9s 30 ======================================================================
-51.9s 31 
-86.5s 32 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-86.5s 33 with autocast(enabled=self.use_amp):
-86.5s 34 
-86.5s 35 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-86.5s 36 with autocast(enabled=self.use_amp):
-92.1s 37 Epoch 001/050 │ Loss: 0.8436 / 0.8608 │ Acc: 0.7186 │ F1: 0.5568 │ κ: 0.5642 │ MCC: 0.5746 │ LR: 9.99e-04 │ 40.2s ★
-92.1s 38 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-92.1s 39 with autocast(enabled=self.use_amp):
-92.1s 40 
-92.1s 41 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-92.1s 42 with autocast(enabled=self.use_amp):
-104.9s 43 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-104.9s 44 with autocast(enabled=self.use_amp):
-104.9s 45 
-104.9s 46 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-104.9s 47 with autocast(enabled=self.use_amp):
-106.2s 48 Epoch 002/050 │ Loss: 0.2772 / 0.6892 │ Acc: 0.8632 │ F1: 0.8629 │ κ: 0.7985 │ MCC: 0.7985 │ LR: 9.96e-04 │ 14.1s ★
-106.2s 49 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-106.2s 50 with autocast(enabled=self.use_amp):
-106.2s 51 
-106.2s 52 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-106.2s 53 with autocast(enabled=self.use_amp):
-119.3s 54 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-119.3s 55 with autocast(enabled=self.use_amp):
-119.3s 56 
-119.3s 57 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-119.3s 58 with autocast(enabled=self.use_amp):
-120.7s 59 Epoch 003/050 │ Loss: 0.0460 / 0.6310 │ Acc: 0.8983 │ F1: 0.8966 │ κ: 0.8505 │ MCC: 0.8518 │ LR: 9.91e-04 │ 14.4s ★
-120.7s 60 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-120.7s 61 with autocast(enabled=self.use_amp):
-120.7s 62 
-120.7s 63 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-120.7s 64 with autocast(enabled=self.use_amp):
-133.8s 65 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-133.8s 66 with autocast(enabled=self.use_amp):
-133.8s 67 
-133.8s 68 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-133.8s 69 with autocast(enabled=self.use_amp):
-135.1s 70 Epoch 004/050 │ Loss: 0.0168 / 0.5978 │ Acc: 0.9031 │ F1: 0.9029 │ κ: 0.8570 │ MCC: 0.8580 │ LR: 9.84e-04 │ 14.5s ★
-135.1s 71 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-135.1s 72 with autocast(enabled=self.use_amp):
-135.1s 73 
-135.1s 74 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-135.1s 75 with autocast(enabled=self.use_amp):
-148.0s 76 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-148.0s 77 with autocast(enabled=self.use_amp):
-148.0s 78 
-148.0s 79 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-148.0s 80 with autocast(enabled=self.use_amp):
-149.4s 81 Epoch 005/050 │ Loss: 0.0113 / 0.9838 │ Acc: 0.8208 │ F1: 0.8320 │ κ: 0.7391 │ MCC: 0.7410 │ LR: 9.76e-04 │ 14.2s
-149.4s 82 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-149.4s 83 with autocast(enabled=self.use_amp):
-149.4s 84 
-149.4s 85 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-149.4s 86 with autocast(enabled=self.use_amp):
-162.3s 87 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-162.3s 88 with autocast(enabled=self.use_amp):
-162.3s 89 
-162.3s 90 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-162.3s 91 with autocast(enabled=self.use_amp):
-163.7s 92 Epoch 006/050 │ Loss: 0.0091 / 0.7615 │ Acc: 0.8884 │ F1: 0.8957 │ κ: 0.8374 │ MCC: 0.8399 │ LR: 9.65e-04 │ 14.3s
-163.7s 93 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-163.7s 94 with autocast(enabled=self.use_amp):
-163.7s 95 
-163.7s 96 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-163.7s 97 with autocast(enabled=self.use_amp):
-176.5s 98 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-176.5s 99 with autocast(enabled=self.use_amp):
-176.5s 100 
-176.5s 101 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-176.5s 102 with autocast(enabled=self.use_amp):
-177.9s 103 Epoch 007/050 │ Loss: 0.0009 / 0.2853 │ Acc: 0.9513 │ F1: 0.9368 │ κ: 0.9282 │ MCC: 0.9299 │ LR: 9.52e-04 │ 14.2s ★
-177.9s 104 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-177.9s 105 with autocast(enabled=self.use_amp):
-177.9s 106 
-177.9s 107 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-177.9s 108 with autocast(enabled=self.use_amp):
-190.8s 109 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-190.8s 110 with autocast(enabled=self.use_amp):
-190.8s 111 
-190.8s 112 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-190.8s 113 with autocast(enabled=self.use_amp):
-192.1s 114 Epoch 008/050 │ Loss: 0.0056 / 1.3286 │ Acc: 0.8155 │ F1: 0.8019 │ κ: 0.7268 │ MCC: 0.7327 │ LR: 9.38e-04 │ 14.2s
-192.1s 115 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-192.1s 116 with autocast(enabled=self.use_amp):
-192.1s 117 
-192.1s 118 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-192.1s 119 with autocast(enabled=self.use_amp):
-205.0s 120 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-205.0s 121 with autocast(enabled=self.use_amp):
-205.0s 122 
-205.0s 123 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-205.0s 124 with autocast(enabled=self.use_amp):
-206.3s 125 Epoch 009/050 │ Loss: 0.0031 / 1.1825 │ Acc: 0.8384 │ F1: 0.7894 │ κ: 0.7663 │ MCC: 0.7807 │ LR: 9.22e-04 │ 14.2s
-206.3s 126 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-206.3s 127 with autocast(enabled=self.use_amp):
-206.3s 128 
-206.3s 129 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-206.3s 130 with autocast(enabled=self.use_amp):
-219.2s 131 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-219.2s 132 with autocast(enabled=self.use_amp):
-219.2s 133 
-219.2s 134 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-219.2s 135 with autocast(enabled=self.use_amp):
-220.6s 136 Epoch 010/050 │ Loss: 0.0096 / 0.2331 │ Acc: 0.9558 │ F1: 0.9556 │ κ: 0.9350 │ MCC: 0.9370 │ LR: 9.05e-04 │ 14.3s ★
-220.6s 137 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-220.6s 138 with autocast(enabled=self.use_amp):
-220.6s 139 
-220.6s 140 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-220.6s 141 with autocast(enabled=self.use_amp):
-233.5s 142 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-233.5s 143 with autocast(enabled=self.use_amp):
-233.5s 144 
-233.5s 145 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-233.5s 146 with autocast(enabled=self.use_amp):
-234.8s 147 Epoch 011/050 │ Loss: 0.0000 / 0.4540 │ Acc: 0.9396 │ F1: 0.9390 │ κ: 0.9111 │ MCC: 0.9157 │ LR: 8.85e-04 │ 14.2s
-234.8s 148 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-234.8s 149 with autocast(enabled=self.use_amp):
-234.8s 150 
-234.8s 151 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-234.8s 152 with autocast(enabled=self.use_amp):
-247.6s 153 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-247.6s 154 with autocast(enabled=self.use_amp):
-247.6s 155 
-247.6s 156 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-247.6s 157 with autocast(enabled=self.use_amp):
-248.9s 158 Epoch 012/050 │ Loss: 0.0000 / 0.4648 │ Acc: 0.9396 │ F1: 0.9389 │ κ: 0.9111 │ MCC: 0.9156 │ LR: 8.64e-04 │ 14.1s
-249.0s 159 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-249.0s 160 with autocast(enabled=self.use_amp):
-249.0s 161 
-249.0s 162 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-249.0s 163 with autocast(enabled=self.use_amp):
-261.8s 164 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-261.8s 165 with autocast(enabled=self.use_amp):
-261.8s 166 
-261.8s 167 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-261.8s 168 with autocast(enabled=self.use_amp):
-263.1s 169 Epoch 013/050 │ Loss: 0.0000 / 0.4899 │ Acc: 0.9390 │ F1: 0.9384 │ κ: 0.9103 │ MCC: 0.9149 │ LR: 8.42e-04 │ 14.2s
-263.1s 170 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-263.1s 171 with autocast(enabled=self.use_amp):
-263.1s 172 
-263.1s 173 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-263.1s 174 with autocast(enabled=self.use_amp):
-275.9s 175 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-275.9s 176 with autocast(enabled=self.use_amp):
-275.9s 177 
-275.9s 178 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-275.9s 179 with autocast(enabled=self.use_amp):
-277.2s 180 Epoch 014/050 │ Loss: 0.0000 / 0.5126 │ Acc: 0.9390 │ F1: 0.9381 │ κ: 0.9103 │ MCC: 0.9150 │ LR: 8.19e-04 │ 14.1s
-277.2s 181 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-277.2s 182 with autocast(enabled=self.use_amp):
-277.2s 183 
-277.2s 184 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-277.2s 185 with autocast(enabled=self.use_amp):
-290.0s 186 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-290.0s 187 with autocast(enabled=self.use_amp):
-290.0s 188 
-290.0s 189 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-290.0s 190 with autocast(enabled=self.use_amp):
-291.3s 191 Epoch 015/050 │ Loss: 0.0000 / 0.5372 │ Acc: 0.9390 │ F1: 0.9381 │ κ: 0.9103 │ MCC: 0.9150 │ LR: 7.94e-04 │ 14.1s
-291.3s 192 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-291.3s 193 with autocast(enabled=self.use_amp):
-291.3s 194 
-291.3s 195 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-291.3s 196 with autocast(enabled=self.use_amp):
-304.1s 197 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-304.1s 198 with autocast(enabled=self.use_amp):
-304.1s 199 
-304.1s 200 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-304.1s 201 with autocast(enabled=self.use_amp):
-305.4s 202 Epoch 016/050 │ Loss: 0.0000 / 0.5682 │ Acc: 0.9377 │ F1: 0.9367 │ κ: 0.9083 │ MCC: 0.9133 │ LR: 7.68e-04 │ 14.1s
-305.4s 203 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-305.4s 204 with autocast(enabled=self.use_amp):
-305.4s 205 
-305.4s 206 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-305.4s 207 with autocast(enabled=self.use_amp):
-318.2s 208 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-318.2s 209 with autocast(enabled=self.use_amp):
-318.2s 210 
-318.2s 211 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-318.2s 212 with autocast(enabled=self.use_amp):
-319.5s 213 Epoch 017/050 │ Loss: 0.0000 / 0.5972 │ Acc: 0.9374 │ F1: 0.9364 │ κ: 0.9079 │ MCC: 0.9129 │ LR: 7.41e-04 │ 14.1s
-319.5s 214 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-319.5s 215 with autocast(enabled=self.use_amp):
-319.5s 216 
-319.5s 217 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-319.5s 218 with autocast(enabled=self.use_amp):
-332.3s 219 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-332.3s 220 with autocast(enabled=self.use_amp):
-332.3s 221 
-332.3s 222 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-332.3s 223 with autocast(enabled=self.use_amp):
-333.7s 224 Epoch 018/050 │ Loss: 0.0000 / 0.6239 │ Acc: 0.9369 │ F1: 0.9359 │ κ: 0.9072 │ MCC: 0.9122 │ LR: 7.13e-04 │ 14.2s
-333.7s 225 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-333.7s 226 with autocast(enabled=self.use_amp):
-333.7s 227 
-333.7s 228 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-333.7s 229 with autocast(enabled=self.use_amp):
-346.5s 230 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-346.5s 231 with autocast(enabled=self.use_amp):
-346.5s 232 
-346.5s 233 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-346.5s 234 with autocast(enabled=self.use_amp):
-347.8s 235 Epoch 019/050 │ Loss: 0.0000 / 0.6479 │ Acc: 0.9366 │ F1: 0.9356 │ κ: 0.9068 │ MCC: 0.9119 │ LR: 6.84e-04 │ 14.2s
-347.8s 236 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-347.8s 237 with autocast(enabled=self.use_amp):
-347.8s 238 
-347.8s 239 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:145: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-347.8s 240 with autocast(enabled=self.use_amp):
-360.7s 241 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-360.7s 242 with autocast(enabled=self.use_amp):
-360.7s 243 
-360.7s 244 /kaggle/working/cnn_trainer_graduation_thesis/trainer.py:189: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-360.7s 245 with autocast(enabled=self.use_amp):
-361.9s 246 Epoch 020/050 │ Loss: 0.0000 / 0.6732 │ Acc: 0.9364 │ F1: 0.9353 │ κ: 0.9064 │ MCC: 0.9115 │ LR: 6.55e-04 │ 14.2s
-361.9s 247 
-361.9s 248 ✗ Early stopping at epoch 20.
-361.9s 249 Best epoch: 10 (val_loss=0.2331)
-361.9s 250 
-361.9s 251 ✓ Restored best model from epoch 10.
-362.1s 252 
-362.1s 253 ──────────────────────────────────────────────────
-362.1s 254 Training Summary — Best Epoch: 10
-362.1s 255 ──────────────────────────────────────────────────
-362.1s 256 Accuracy       : 0.9364
-362.1s 257 Precision (M)  : 0.9487
-362.1s 258 Recall    (M)  : 0.9361
-362.1s 259 F1-Score  (M)  : 0.9353
-362.1s 260 AUC-ROC   (M)  : 0.9824
-362.1s 261 Cohen's κ      : 0.9064
-362.1s 262 MCC            : 0.9115
-362.1s 263 ──────────────────────────────────────────────────
-362.1s 264 
-362.1s 265 precision    recall  f1-score   support
-362.1s 266 
-362.1s 267 Normal     1.0000    0.9957    0.9979       234
-362.1s 268 Outer Race     0.9994    0.9976    0.9985      1645
-362.1s 269 Inner Race     0.9958    0.7511    0.8563       940
-362.1s 270 Ball     0.7995    1.0000    0.8886       937
-362.1s 271 
-362.1s 272 accuracy                         0.9364      3756
-362.1s 273 macro avg     0.9487    0.9361    0.9353      3756
-362.1s 274 weighted avg     0.9487    0.9364    0.9354      3756
-362.1s 275 
-364.6s 276 ✓ Model saved to best_model.pth
-370.6s 277 /usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\|'
-370.6s 278 cells[i][c] = re.sub('\\\\\|', '|', cell)
-370.8s 279 /usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
-370.8s 280 text = re.sub(r'_', '\_', text) # Escape underscores in display text
-371.5s 281 [NbConvertApp] Converting notebook __notebook__.ipynb to notebook
-371.8s 282 [NbConvertApp] Writing 308471 bytes to __notebook__.ipynb
-374.1s 283 [NbConvertApp] Converting notebook __notebook__.ipynb to html
-374.9s 284 [NbConvertApp] Support files will be in __results___files/
-374.9s 285 [NbConvertApp] Making directory __results___files
-374.9s 286 [NbConvertApp] Making directory __results___files
-374.9s 287 [NbConvertApp] Making directory __results___files
-374.9s 288 [NbConvertApp] Making directory __results___files
-374.9s 289 [NbConvertApp] Making directory __results___files
-374.9s 290 [NbConvertApp] Writing 306578 bytes to __results__.html
+11.3s 1 0.00s - Debugger warning: It seems that frozen modules are being used, which may
+11.3s 2 0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+11.3s 3 0.00s - to python to disable frozen modules.
+11.3s 4 0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+12.1s 5 0.00s - Debugger warning: It seems that frozen modules are being used, which may
+12.1s 6 0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+12.1s 7 0.00s - to python to disable frozen modules.
+12.1s 8 0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+13.4s 9 Cloning into 'cnn_trainer_graduation_thesis'...
+14.3s 10 remote: Enumerating objects: 39, done.[K
+14.3s 11 remote: Counting objects:   2% (1/39)[Kremote: Counting objects:   5% (2/39)[Kremote: Counting objects:   7% (3/39)[Kremote: Counting objects:  10% (4/39)[Kremote: Counting objects:  12% (5/39)[Kremote: Counting objects:  15% (6/39)[Kremote: Counting objects:  17% (7/39)[Kremote: Counting objects:  20% (8/39)[Kremote: Counting objects:  23% (9/39)[Kremote: Counting objects:  25% (10/39)[Kremote: Counting objects:  28% (11/39)[Kremote: Counting objects:  30% (12/39)[Kremote: Counting objects:  33% (13/39)[Kremote: Counting objects:  35% (14/39)[Kremote: Counting objects:  38% (15/39)[Kremote: Counting objects:  41% (16/39)[Kremote: Counting objects:  43% (17/39)[Kremote: Counting objects:  46% (18/39)[Kremote: Counting objects:  48% (19/39)[Kremote: Counting objects:  51% (20/39)[Kremote: Counting objects:  53% (21/39)[Kremote: Counting objects:  56% (22/39)[Kremote: Counting objects:  58% (23/39)[Kremote: Counting objects:  61% (24/39)[Kremote: Counting objects:  64% (25/39)[Kremote: Counting objects:  66% (26/39)[Kremote: Counting objects:  69% (27/39)[Kremote: Counting objects:  71% (28/39)[Kremote: Counting objects:  74% (29/39)[Kremote: Counting objects:  76% (30/39)[Kremote: Counting objects:  79% (31/39)[Kremote: Counting objects:  82% (32/39)[Kremote: Counting objects:  84% (33/39)[Kremote: Counting objects:  87% (34/39)[Kremote: Counting objects:  89% (35/39)[Kremote: Counting objects:  92% (36/39)[Kremote: Counting objects:  94% (37/39)[Kremote: Counting objects:  97% (38/39)[Kremote: Counting objects: 100% (39/39)[Kremote: Counting objects: 100% (39/39), done.[K
+14.3s 12 remote: Compressing objects:   3% (1/31)[Kremote: Compressing objects:   6% (2/31)[Kremote: Compressing objects:   9% (3/31)[Kremote: Compressing objects:  12% (4/31)[Kremote: Compressing objects:  16% (5/31)[Kremote: Compressing objects:  19% (6/31)[Kremote: Compressing objects:  22% (7/31)[Kremote: Compressing objects:  25% (8/31)[Kremote: Compressing objects:  29% (9/31)[Kremote: Compressing objects:  32% (10/31)[Kremote: Compressing objects:  35% (11/31)[Kremote: Compressing objects:  38% (12/31)[Kremote: Compressing objects:  41% (13/31)[Kremote: Compressing objects:  45% (14/31)[Kremote: Compressing objects:  48% (15/31)[Kremote: Compressing objects:  51% (16/31)[Kremote: Compressing objects:  54% (17/31)[Kremote: Compressing objects:  58% (18/31)[Kremote: Compressing objects:  61% (19/31)[Kremote: Compressing objects:  64% (20/31)[Kremote: Compressing objects:  67% (21/31)[Kremote: Compressing objects:  70% (22/31)[Kremote: Compressing objects:  74% (23/31)[Kremote: Compressing objects:  77% (24/31)[Kremote: Compressing objects:  80% (25/31)[Kremote: Compressing objects:  83% (26/31)[Kremote: Compressing objects:  87% (27/31)[Kremote: Compressing objects:  90% (28/31)[Kremote: Compressing objects:  93% (29/31)[Kremote: Compressing objects:  96% (30/31)[Kremote: Compressing objects: 100% (31/31)[Kremote: Compressing objects: 100% (31/31), done.[K
+14.3s 13 Receiving objects:   2% (1/39)Receiving objects:   5% (2/39)Receiving objects:   7% (3/39)Receiving objects:  10% (4/39)Receiving objects:  12% (5/39)Receiving objects:  15% (6/39)Receiving objects:  17% (7/39)Receiving objects:  20% (8/39)Receiving objects:  23% (9/39)Receiving objects:  25% (10/39)Receiving objects:  28% (11/39)Receiving objects:  30% (12/39)Receiving objects:  33% (13/39)Receiving objects:  35% (14/39)Receiving objects:  38% (15/39)remote: Total 39 (delta 21), reused 19 (delta 8), pack-reused 0 (from 0)[K
+14.3s 14 Receiving objects:  41% (16/39)Receiving objects:  43% (17/39)Receiving objects:  46% (18/39)Receiving objects:  48% (19/39)Receiving objects:  51% (20/39)Receiving objects:  53% (21/39)Receiving objects:  56% (22/39)Receiving objects:  58% (23/39)Receiving objects:  61% (24/39)Receiving objects:  64% (25/39)Receiving objects:  66% (26/39)Receiving objects:  69% (27/39)Receiving objects:  71% (28/39)Receiving objects:  74% (29/39)Receiving objects:  76% (30/39)Receiving objects:  79% (31/39)Receiving objects:  82% (32/39)Receiving objects:  84% (33/39)Receiving objects:  87% (34/39)Receiving objects:  89% (35/39)Receiving objects:  92% (36/39)Receiving objects:  94% (37/39)Receiving objects:  97% (38/39)Receiving objects: 100% (39/39)Receiving objects: 100% (39/39), 18.38 KiB | 3.06 MiB/s, done.
+14.3s 15 Resolving deltas:   0% (0/21)Resolving deltas:   4% (1/21)Resolving deltas:   9% (2/21)Resolving deltas:  14% (3/21)Resolving deltas:  19% (4/21)Resolving deltas:  23% (5/21)Resolving deltas:  28% (6/21)Resolving deltas:  33% (7/21)Resolving deltas:  38% (8/21)Resolving deltas:  42% (9/21)Resolving deltas:  47% (10/21)Resolving deltas:  52% (11/21)Resolving deltas:  57% (12/21)Resolving deltas:  61% (13/21)Resolving deltas:  66% (14/21)Resolving deltas:  71% (15/21)Resolving deltas:  76% (16/21)Resolving deltas:  80% (17/21)Resolving deltas:  85% (18/21)Resolving deltas:  90% (19/21)Resolving deltas:  95% (20/21)Resolving deltas: 100% (21/21)Resolving deltas: 100% (21/21), done.
+49.0s 16 ======================================================================
+49.0s 17 Training on cuda | AMP: True
+49.0s 18 Classes: ['Normal', 'Outer Race', 'Inner Race', 'Ball']
+49.0s 19 Patience: 10
+49.0s 20 ======================================================================
+49.0s 21 
+91.6s 22 Epoch 001/150 │ Loss: 0.9874 / 1.0958 │ Acc: 0.5495 │ F1: 0.3901 │ κ: 0.2588 │ MCC: 0.3044 │ LR: 3.00e-05 │ 42.6s ★
+107.0s 23 Epoch 002/150 │ Loss: 0.5755 / 0.7641 │ Acc: 0.7580 │ F1: 0.7960 │ κ: 0.6257 │ MCC: 0.6517 │ LR: 3.00e-05 │ 15.4s ★
+122.4s 24 Epoch 003/150 │ Loss: 0.3549 / 0.5409 │ Acc: 0.8309 │ F1: 0.8028 │ κ: 0.7402 │ MCC: 0.7547 │ LR: 3.00e-05 │ 15.3s ★
+137.6s 25 Epoch 004/150 │ Loss: 0.1395 / 0.4891 │ Acc: 0.8411 │ F1: 0.7426 │ κ: 0.7568 │ MCC: 0.7646 │ LR: 2.99e-05 │ 15.2s ★
+152.9s 26 Epoch 005/150 │ Loss: 0.0486 / 0.3297 │ Acc: 0.9185 │ F1: 0.9288 │ κ: 0.8780 │ MCC: 0.8822 │ LR: 2.99e-05 │ 15.3s ★
+168.1s 27 Epoch 006/150 │ Loss: 0.0155 / 0.4145 │ Acc: 0.9332 │ F1: 0.9434 │ κ: 0.9000 │ MCC: 0.9047 │ LR: 2.99e-05 │ 15.2s
+183.3s 28 Epoch 007/150 │ Loss: 0.0099 / 0.7884 │ Acc: 0.8647 │ F1: 0.8680 │ κ: 0.7946 │ MCC: 0.8153 │ LR: 2.98e-05 │ 15.2s
+198.5s 29 Epoch 008/150 │ Loss: 0.0060 / 1.1725 │ Acc: 0.8336 │ F1: 0.8387 │ κ: 0.7439 │ MCC: 0.7751 │ LR: 2.98e-05 │ 15.2s
+213.8s 30 Epoch 009/150 │ Loss: 0.0057 / 0.5775 │ Acc: 0.9233 │ F1: 0.9297 │ κ: 0.8856 │ MCC: 0.8900 │ LR: 2.97e-05 │ 15.3s
+229.0s 31 Epoch 010/150 │ Loss: 0.0074 / 0.6953 │ Acc: 0.9372 │ F1: 0.9474 │ κ: 0.9059 │ MCC: 0.9115 │ LR: 2.97e-05 │ 15.2s
+244.3s 32 Epoch 011/150 │ Loss: 0.0032 / 1.1142 │ Acc: 0.8770 │ F1: 0.8881 │ κ: 0.8130 │ MCC: 0.8302 │ LR: 2.96e-05 │ 15.4s
+259.6s 33 Epoch 012/150 │ Loss: 0.0030 / 0.6904 │ Acc: 0.9350 │ F1: 0.9451 │ κ: 0.9027 │ MCC: 0.9078 │ LR: 2.95e-05 │ 15.3s
+274.9s 34 Epoch 013/150 │ Loss: 0.0035 / 0.6717 │ Acc: 0.9217 │ F1: 0.9289 │ κ: 0.8831 │ MCC: 0.8878 │ LR: 2.94e-05 │ 15.3s
+290.0s 35 Epoch 014/150 │ Loss: 0.0013 / 0.7081 │ Acc: 0.9321 │ F1: 0.9411 │ κ: 0.8985 │ MCC: 0.9027 │ LR: 2.94e-05 │ 15.1s
+305.1s 36 Epoch 015/150 │ Loss: 0.0048 / 1.2333 │ Acc: 0.8733 │ F1: 0.8710 │ κ: 0.8100 │ MCC: 0.8252 │ LR: 2.93e-05 │ 15.3s
+305.1s 37 
+305.1s 38 ✗ Early stopping at epoch 15.
+305.1s 39 Best epoch: 5 (val_loss=0.3297)
+305.1s 40 
+305.1s 41 ✓ Restored best model from epoch 5.
+305.3s 42 
+305.3s 43 ──────────────────────────────────────────────────
+305.3s 44 Training Summary — Best Epoch: 5
+305.3s 45 ──────────────────────────────────────────────────
+305.3s 46 Accuracy       : 0.8733
+305.3s 47 Precision (M)  : 0.9178
+305.3s 48 Recall    (M)  : 0.8734
+305.3s 49 F1-Score  (M)  : 0.8710
+305.3s 50 AUC-ROC   (M)  : 0.9782
+305.3s 51 Cohen's κ      : 0.8100
+305.3s 52 MCC            : 0.8252
+305.3s 53 ──────────────────────────────────────────────────
+305.3s 54 
+305.3s 55 precision    recall  f1-score   support
+305.3s 56 
+305.3s 57 Normal     1.0000    1.0000    1.0000       234
+305.3s 58 Outer Race     0.8667    1.0000    0.9286      1645
+305.3s 59 Inner Race     0.9957    0.4957    0.6619       940
+305.3s 60 Ball     0.8088    0.9979    0.8935       937
+305.3s 61 
+305.3s 62 accuracy                         0.8733      3756
+305.3s 63 macro avg     0.9178    0.8734    0.8710      3756
+305.3s 64 weighted avg     0.8929    0.8733    0.8575      3756
+305.3s 65 
+308.0s 66 ✓ Model saved to best_model.pth
+314.0s 67 /usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\|'
+314.0s 68 cells[i][c] = re.sub('\\\\\|', '|', cell)
+314.2s 69 /usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
+314.2s 70 text = re.sub(r'_', '\_', text) # Escape underscores in display text
+314.9s 71 [NbConvertApp] Converting notebook __notebook__.ipynb to notebook
+315.2s 72 [NbConvertApp] Writing 303714 bytes to __notebook__.ipynb
+317.5s 73 [NbConvertApp] Converting notebook __notebook__.ipynb to html
+318.3s 74 [NbConvertApp] Support files will be in __results___files/
+318.3s 75 [NbConvertApp] Making directory __results___files
+318.3s 76 [NbConvertApp] Making directory __results___files
+318.3s 77 [NbConvertApp] Making directory __results___files
+318.3s 78 [NbConvertApp] Making directory __results___files
+318.3s 79 [NbConvertApp] Making directory __results___files
+318.3s 80 [NbConvertApp] Writing 289962 bytes to __results__.html
