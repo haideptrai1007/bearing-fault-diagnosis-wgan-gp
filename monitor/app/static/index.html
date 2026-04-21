@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Vibration Monitor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/static/style.css?v=1776777300"/>
+</head>
+<body>
+  <div class="ambient-bg" aria-hidden="true">
+    <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+    <div class="grain"></div>
+  </div>
+
+  <main class="shell">
+
+    <header class="hdr">
+      <div>
+        <h1 class="title">Vibration <em>Monitor</em></h1>
+        <p class="subtitle">Real-time sliding window fault detection</p>
+      </div>
+      <div class="hdr-right">
+        <span class="badge" id="statusBadge"><span class="badge-dot"></span><span id="statusText">Idle</span></span>
+        <span class="timer-pill" id="timerPill" hidden><span id="timerText">0.00 s</span></span>
+      </div>
+    </header>
+
+    <div class="layout">
+
+      <!-- LEFT: signal + bars + input -->
+      <div class="left-col">
+
+        <section class="card signal-card">
+          <div class="card-hdr">
+            <span class="eyebrow">01 · Time Domain</span>
+            <h2 class="card-title">Raw Signal</h2>
+          </div>
+          <div class="canvas-wrap">
+            <canvas id="sigCanvas"></canvas>
+          </div>
+          <div class="bars-section">
+            <div class="bar-row">
+              <span class="bar-label">Prediction</span>
+              <div class="faultbar" id="faultBar"></div>
+            </div>
+            <div class="bar-row" id="gtBarRow" hidden>
+              <span class="bar-label">Ground Truth</span>
+              <div class="faultbar" id="gtBar"></div>
+            </div>
+            <div class="faultbar-ticks" id="faultTicks"></div>
+          </div>
+        </section>
+
+        <section class="card ctrl-card">
+          <div class="eyebrow" style="margin-bottom:8px">Input</div>
+          <div class="input-row">
+            <div class="input-wrap">
+              <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
+                <polyline points="13 2 13 9 20 9"/>
+              </svg>
+              <input id="sigPath" type="text" placeholder="/path/to/signal.mat" autocomplete="off" spellcheck="false"/>
+            </div>
+            <select id="transformSel" class="sel">
+              <option value="scalogram">Scalogram (CWT)</option>
+              <option value="spectrogram">Spectrogram (STFT)</option>
+            </select>
+            <select id="modelSel" class="sel">
+              <option value="MobileNetV4">MobileNet V4</option>
+              <option value="TinyNetD">TinyNet D</option>
+              <option value="EdgeNeXtXXS">EdgeNeXt XXS</option>
+              <option value="GhostNetV3">GhostNet V3</option>
+            </select>
+            <button class="run-btn" id="runBtn">
+              <span class="run-bg"></span>
+              <span class="run-inner">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+                <span id="runTxt">Run</span>
+              </span>
+            </button>
+            <button class="stop-btn" id="stopBtn" hidden>
+              <span class="stop-inner">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+                Stop
+              </span>
+            </button>
+          </div>
+
+          <div class="options-row">
+            <div class="threshold-wrap">
+              <label class="option-label" for="thresholdSlider">
+                Confidence Threshold <span class="threshold-val" id="thresholdVal">80%</span>
+              </label>
+              <input type="range" id="thresholdSlider" min="0" max="100" value="80" step="1" class="slider"/>
+              <div class="slider-hints"><span>0%</span><span>50%</span><span>100%</span></div>
+            </div>
+            <div class="gt-toggle-wrap" id="gtToggleWrap" hidden>
+              <label class="option-label">Ground Truth Bar</label>
+              <button class="toggle-btn" id="gtToggleBtn" data-on="false">
+                <span class="toggle-track"><span class="toggle-thumb"></span></span>
+                <span class="toggle-text" id="gtToggleTxt">Hidden</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- RIGHT: summary + history -->
+      <div class="right-col">
+
+        <section class="card summary-card">
+          <div class="eyebrow" style="margin-bottom:10px">Session Summary</div>
+          <div class="summary-grid">
+            <div class="summary-item">
+              <span class="summary-val green" id="sumNormal">0</span>
+              <span class="summary-lbl">Normal</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-val red" id="sumFault">0</span>
+              <span class="summary-lbl">Fault</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-val blue" id="sumAvgPreproc">—</span>
+              <span class="summary-lbl">Avg Preproc</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-val blue" id="sumAvgModel">—</span>
+              <span class="summary-lbl">Avg Model</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="card timeline-card">
+          <div class="card-hdr" style="margin-bottom:8px">
+            <span class="eyebrow">Prediction History</span>
+            <button class="clear-btn" id="clearBtn">Clear</button>
+          </div>
+          <!-- Header row: 7 columns matching tl-item (dot | time | label | conf | preproc | sep | model) -->
+          <div class="tl-header">
+            <span></span><!-- dot placeholder -->
+            <span>Time</span>
+            <span>Label</span>
+            <span style="text-align:right">Conf</span>
+            <span style="text-align:right">Preproc</span>
+            <span></span>
+            <span style="text-align:right">Model</span>
+          </div>
+          <div class="timeline" id="timeline">
+            <div class="timeline-empty">No predictions yet</div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+  </main>
+  <script src="/static/monitor.js?v=1776777300"></script>
+</body>
+</html>
