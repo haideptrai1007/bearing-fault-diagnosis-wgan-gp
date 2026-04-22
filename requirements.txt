@@ -1,6 +1,8 @@
-fastapi
+fastapi==0.121.1
 uvicorn[standard]
-onnxruntime
-numpy
-scipy
+onnxruntime==1.24.4
+numpy==2.4.4 
+scipy==1.17.1
 pywavelets==1.7.0
+pydantic==2.12.4
+pillow==12.1.1
