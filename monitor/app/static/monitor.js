@@ -32,7 +32,6 @@ const el = {
   faultBar:        $('faultBar'),
   gtBar:           $('gtBar'),
   gtBarRow:        $('gtBarRow'),
-  faultTicks:      $('faultTicks'),
   thresholdSlider: $('thresholdSlider'),
   thresholdVal:    $('thresholdVal'),
   gtToggleWrap:    $('gtToggleWrap'),
@@ -101,11 +100,13 @@ let oscAmp     = 1;
 let oscColor   = '#16a34a';
 let rawSignal  = null;
 let animFrame  = null;
-let oscDirty   = false;
-let sigDuration= 0;   // seconds — set from /signal-info
+let oscDirty         = false;
+let sigDuration      = 0;   // seconds — set from /signal-info
+let oscSamplesWritten= 0;   // total samples pushed so far
+let oscTotalSamples  = 0;   // total samples in full signal
 
 // Layout constants (in CSS px)
-const PAD = { top: 18, right: 18, bottom: 36, left: 56 };
+const PAD = { top: 18, right: 18, bottom: 22, left: 56 };
 
 function initOscilloscope() {
   const rect = el.canvas.getBoundingClientRect();
@@ -116,6 +117,7 @@ function initOscilloscope() {
   oscBufSize = Math.floor(W - PAD.left - PAD.right);
   oscBuf     = new Float32Array(oscBufSize);
   oscWrite   = 0; oscFilled = 0; oscAmp = 1;
+  oscSamplesWritten = 0;
   oscColor   = '#16a34a'; oscDirty = true;
   if (animFrame) cancelAnimationFrame(animFrame);
   animFrame = null;
@@ -130,6 +132,7 @@ function _rAF() {
 }
 
 function pushSamples(samples) {
+  oscSamplesWritten += samples.length;
   for (let i = 0; i < samples.length; i++) {
     const v = samples[i];
     if (Math.abs(v) > oscAmp) oscAmp = Math.abs(v) * 1.05;
@@ -207,21 +210,7 @@ function drawOscilloscope() {
   ctx.fillText('Amplitude', 0, 0);
   ctx.restore();
 
-  // ── X-axis labels (Time) ──────────────────────────────────
-  ctx.textAlign   = 'center';
-  ctx.textBaseline= 'top';
-  ctx.fillStyle   = '#374151';
-  ctx.font        = `11px "JetBrains Mono", monospace`;
-  const dur = sigDuration || 1;
-  for (let g = 0; g <= xGridCount; g++) {
-    const x = px + (g / xGridCount) * pw;
-    const t = (oscFilled >= oscBufSize)
-      ? (g / xGridCount) * dur
-      : (g / xGridCount) * (oscFilled / oscBufSize) * dur;
-    ctx.fillText(t.toFixed(1) + 's', x, py + ph + 5);
-  }
-
-  // X-axis title
+  // ── X-axis title only — no tick values ───────────────────
   ctx.textAlign   = 'center';
   ctx.textBaseline= 'bottom';
   ctx.fillStyle   = '#6b7280';
@@ -303,16 +292,7 @@ function buildGTBar(gtLabels) {
   }
 }
 
-function buildFaultTicks(durationS) {
-  el.faultTicks.innerHTML = '';
-  const steps = Math.min(10, Math.floor(durationS));
-  for (let i = 0; i <= steps; i++) {
-    const t = (i / steps) * durationS;
-    const d = document.createElement('span');
-    d.textContent = t.toFixed(1) + 's';
-    el.faultTicks.appendChild(d);
-  }
-}
+
 
 /* ── Timeline ── */
 function addTimelineEntry(r) {
@@ -365,8 +345,8 @@ function stopTimer() { clearInterval(timerInterval); }
 function resetUI() {
   nNormal=0; nFault=0; preprocTimes=[]; modelTimes=[];
   totalWindows=0; hasGT=false; gtWindowLabels=null; rawSignal=null;
-  oscAmp=1; sigDuration=0;
-  el.faultBar.innerHTML=''; el.gtBar.innerHTML=''; el.faultTicks.innerHTML='';
+  oscAmp=1; sigDuration=0; oscSamplesWritten=0; oscTotalSamples=0;
+  el.faultBar.innerHTML=''; el.gtBar.innerHTML='';
   // Always hide GT bar and reset toggle state on reset
   setGTBarVisible(false);
   el.gtToggleWrap.hidden=true;
@@ -404,12 +384,12 @@ async function run() {
     const info = await infoResp.json();
 
     rawSignal      = info.waveform;
+    oscTotalSamples= info.waveform.length;   // ← live x-axis denominator
     totalWindows   = info.total_windows;
     sigDuration    = info.duration_s;
     hasGT          = info.has_ground_truth;
     gtWindowLabels = info.gt_window_labels;
 
-    buildFaultTicks(info.duration_s);
     pushSamples(rawSignal);  // pre-fill canvas
     oscColor = '#6b7280';    // neutral gray before first prediction
 

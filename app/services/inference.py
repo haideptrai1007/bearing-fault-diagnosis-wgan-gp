@@ -17,9 +17,9 @@ import numpy as np
 from scipy.special import softmax
 
 from src.data.cwru_data import cwru_inference
-from src.features.cwt import cwt2scalogram
-from src.features.stft import stft2spectrogram
-from src.models.onnx_inference import ONNXModel
+from src.features.scalogram import cwt2scalogram
+from src.features.spectrogram import stft2spectrogram
+from src.models.onnx.onnx_inference import ONNXModel
 
 logger = logging.getLogger(__name__)
 

@@ -1,6 +1,10 @@
 dataset/
+gif/
 
 models/**/*.pth
+models/**/*.pt
 models/**/*.onnx
 
 __pycache__/
+
+*.gif

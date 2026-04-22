@@ -101,8 +101,7 @@ button { cursor:pointer; border:none; background:none; }
   color:var(--fg3); min-width:80px; text-align:right; flex-shrink:0; }
 .faultbar { flex:1; height:18px; border-radius:6px; background:var(--border-sub);
   position:relative; overflow:hidden; border:1px solid var(--border-sub); }
-.faultbar-ticks { display:flex; justify-content:space-between; margin-left:88px; margin-top:2px;
-  font-family:var(--mono); font-size:.58rem; color:var(--fg3); padding:0 2px; }
+
 
 /* ── Controls ── */
 .input-row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }

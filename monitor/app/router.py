@@ -49,7 +49,7 @@ LABEL_NAMES = {0: "Normal", 1: "Outer Race Fault", 2: "Inner Race Fault", 3: "Ba
 LABEL_SHORT = {0: "Normal",  1: "OR Fault",         2: "IR Fault",         3: "Ball Fault"}
 
 # ── Model cache ───────────────────────────────────────────────────────────────
-from src.models.onnx_inference import ONNXModel
+from src.models.onnx.onnx_inference import ONNXModel
 _CACHE: dict = {}
 
 def _get_model(path: str) -> ONNXModel:
@@ -69,10 +69,10 @@ def _to_image(window: np.ndarray, transform: str):
     """
     t0 = time.perf_counter()
     if transform == "scalogram":
-        from src.features.cwt import cwt2scalogram
+        from src.features.scalogram import cwt2scalogram
         img = cwt2scalogram(window, img_size=128, gray=True)
     else:
-        from src.features.stft import stft2spectrogram
+        from src.features.spectrogram import stft2spectrogram
         img = stft2spectrogram(window, img_size=128, gray=True)
     preproc_ms = (time.perf_counter() - t0) * 1000.0
     x = np.expand_dims(img.astype(np.float32) / 255.0, axis=0)
