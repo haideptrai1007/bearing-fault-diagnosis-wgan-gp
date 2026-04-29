@@ -24,7 +24,7 @@ WIN  = 2048
 HOP  = 2048   # non-overlapping — matches cwru_inference overlap=0
 
 USE_INT8 = False
-_SUFFIX  = "best_model_int8.onnx" if USE_INT8 else "best_model_fp32.onnx"
+_SUFFIX  = "best_model_int8.onnx"# if USE_INT8 else "best_model_fp32.onnx"
 
 MODEL_PATHS = {
     "MobileNetV4": {
